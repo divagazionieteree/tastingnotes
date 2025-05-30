@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#4a90e2">
+    <meta name="description" content="App per la degustazione e valutazione dei formaggi">
+    <link rel="manifest" href="../manifest.json">
+    <link rel="apple-touch-icon" href="../icons/icon-192x192.png">
+    <title>Degustazione Formaggi</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Degustazione Formaggi</h1>
+            <a href="../index.html" class="back-button">← Torna alla Home</a>
+        </div>
+        
+        <form id="tastingForm">
+            <div class="form-group">
+                <label for="cheeseName">Nome del Formaggio:</label>
+                <input type="text" id="cheeseName" required>
+            </div>
+
+            <div class="form-group">
+                <label for="cheeseType">Tipo di Formaggio:</label>
+                <select id="cheeseType" required>
+                    <option value="">Seleziona...</option>
+                    <option value="fresco">Fresco</option>
+                    <option value="semistagionato">Semistagionato</option>
+                    <option value="stagionato">Stagionato</option>
+                    <option value="erborinato">Erborinato</option>
+                    <option value="pasta_filata">Pasta Filata</option>
+                    <option value="altro">Altro</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="producer">Produttore:</label>
+                <input type="text" id="producer">
+            </div>
+
+            <div class="form-group">
+                <label for="origin">Origine:</label>
+                <input type="text" id="origin">
+            </div>
+
+            <div class="form-section">
+                <h3>Scheda Analitico-Descrittiva</h3>
+                
+                <div class="tasting-section">
+                    <h4>Esame Visivo</h4>
+                    <div class="subsection">
+                        <label>Colore:</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="radio" name="color" value="bianco">
+                                Bianco
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="color" value="avorio">
+                                Avorio
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="color" value="giallo_paglierino">
+                                Giallo Paglierino
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="color" value="giallo_oro">
+                                Giallo Oro
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="color" value="altro">
+                                Altro
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="color" value="na">
+                                N/A
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <label>Consistenza:</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="radio" name="consistency" value="molle">
+                                Molle
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="consistency" value="semidura">
+                                Semidura
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="consistency" value="dura">
+                                Dura
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="consistency" value="friabile">
+                                Friabile
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="consistency" value="na">
+                                N/A
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <label>Struttura:</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="radio" name="structure" value="compatta">
+                                Compatta
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="structure" value="occhiata">
+                                Occhiata
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="structure" value="erborinata">
+                                Erborinata
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="structure" value="filante">
+                                Filante
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="structure" value="na">
+                                N/A
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <label for="visualNotes">Note Visive:</label>
+                        <textarea id="visualNotes" rows="3" placeholder="Colore, consistenza, struttura..."></textarea>
+                    </div>
+                </div>
+
+                <div class="tasting-section">
+                    <h4>Esame Olfattivo</h4>
+                    <div class="subsection">
+                        <label>Intensità:</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="radio" name="nose_intensity" value="leggera">
+                                Leggera
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="nose_intensity" value="moderata">
+                                Moderata
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="nose_intensity" value="intensa">
+                                Intensa
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="nose_intensity" value="na">
+                                N/A
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <label>Descrittori:</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="descriptors" value="latte">
+                                Latte
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="descriptors" value="burro">
+                                Burro
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="descriptors" value="panna">
+                                Panna
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="descriptors" value="frutta">
+                                Frutta
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="descriptors" value="erbe">
+                                Erbe
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="descriptors" value="spezie">
+                                Spezie
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="descriptors" value="frutta_secca">
+                                Frutta Secca
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="descriptors" value="altro">
+                                Altro
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <label for="noseNotes">Note Olfattive:</label>
+                        <textarea id="noseNotes" rows="3" placeholder="Profumi, aromi, intensità..."></textarea>
+                    </div>
+                </div>
+
+                <div class="tasting-section">
+                    <h4>Esame Gustativo</h4>
+                    <div class="subsection">
+                        <label>Dolcezza:</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="radio" name="sweetness" value="leggera">
+                                Leggera
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="sweetness" value="moderata">
+                                Moderata
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="sweetness" value="intensa">
+                                Intensa
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="sweetness" value="na">
+                                N/A
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <label>Salinità:</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="radio" name="saltiness" value="leggera">
+                                Leggera
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="saltiness" value="moderata">
+                                Moderata
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="saltiness" value="intensa">
+                                Intensa
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="saltiness" value="na">
+                                N/A
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <label>Acidità:</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="radio" name="acidity" value="leggera">
+                                Leggera
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="acidity" value="moderata">
+                                Moderata
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="acidity" value="intensa">
+                                Intensa
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="acidity" value="na">
+                                N/A
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <label>Piccantezza:</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="radio" name="spiciness" value="leggera">
+                                Leggera
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="spiciness" value="moderata">
+                                Moderata
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="spiciness" value="intensa">
+                                Intensa
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="spiciness" value="na">
+                                N/A
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <label for="tasteNotes">Note Gustative:</label>
+                        <textarea id="tasteNotes" rows="3" placeholder="Sapore, struttura, equilibrio..."></textarea>
+                    </div>
+                </div>
+
+                <div class="tasting-section">
+                    <h4>Considerazioni Finali</h4>
+                    <div class="subsection">
+                        <label>Equilibrio:</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="radio" name="balance" value="squilibrato">
+                                Squilibrato
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="balance" value="moderatamente_equilibrato">
+                                Moderatamente Equilibrato
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="balance" value="equilibrato">
+                                Equilibrato
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="balance" value="na">
+                                N/A
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <label>Qualità Complessiva:</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="radio" name="overall_quality" value="accettabile">
+                                Accettabile
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="overall_quality" value="buono">
+                                Buono
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="overall_quality" value="distinto">
+                                Distinto
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="overall_quality" value="ottimo">
+                                Ottimo
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="overall_quality" value="eccellente">
+                                Eccellente
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="overall_quality" value="na">
+                                N/A
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <label for="notes">Note Finali:</label>
+                        <textarea id="notes" rows="3" placeholder="Giudizio complessivo, abbinamenti consigliati..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit">Salva Degustazione</button>
+        </form>
+
+        <div id="savedTastings">
+            <div class="export-section">
+                <h2>Degustazioni Salvate</h2>
+                <div class="button-group">
+                    <button id="exportButton" class="export-btn">Esporta Tutte le Degustazioni</button>
+                    <div class="upload-section">
+                        <input type="file" id="jsonFile" accept=".json" style="display: none;">
+                        <button id="uploadAddBtn" class="upload-btn">Carica e Aggiungi</button>
+                        <button id="uploadReplaceBtn" class="upload-btn">Carica e Sostituisci</button>
+                    </div>
+                </div>
+            </div>
+            <div id="tastingsList"></div>
+        </div>
+    </div>
+    <script src="../script.js"></script>
+    <script>
+        // Registra il service worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registrato con successo:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('Registrazione ServiceWorker fallita:', error);
+                    });
+            });
+        }
+    </script>
+</body>
+</html> 

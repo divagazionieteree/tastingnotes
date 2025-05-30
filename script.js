@@ -20,28 +20,47 @@ function loadTastings() {
                 ${tasting.producer ? `<p><strong>Produttore:</strong> ${tasting.producer}</p>` : ''}
                 ${tasting.region ? `<p><strong>Regione:</strong> ${tasting.region}</p>` : ''}
                 ${tasting.rating ? `<p><strong>Valutazione:</strong> ${'★'.repeat(tasting.rating)}${'☆'.repeat(5-tasting.rating)}</p>` : ''}
-                ${tasting.clarity ? `<p><strong>Limpidezza:</strong> ${tasting.clarity.replace('_', ' ')}</p>` : ''}
-                ${tasting.whiteColor ? `<p><strong>Colore (Bianchi):</strong> ${tasting.whiteColor}</p>` : ''}
-                ${tasting.roseColor ? `<p><strong>Colore (Rosé):</strong> ${tasting.roseColor.replace('_', ' ')}</p>` : ''}
-                ${tasting.redColor ? `<p><strong>Colore (Rossi):</strong> ${tasting.redColor}</p>` : ''}
-                ${tasting.consistency ? `<p><strong>Consistenza:</strong> ${tasting.consistency}</p>` : ''}
-                ${(tasting.bubbleChains || tasting.bubbleSpeed || tasting.bubbleSize || tasting.bubblePersistence) ? `
-                    <div class="effervescence-section">
-                        <h5>Effervescenza (Vini frizzanti e spumanti)</h5>
-                        ${tasting.bubbleChains ? `<p><strong>Numero Catenelle:</strong> ${tasting.bubbleChains.replace('_', ' ')}</p>` : ''}
-                        ${tasting.bubbleSpeed ? `<p><strong>Velocità Ascesa:</strong> ${tasting.bubbleSpeed}</p>` : ''}
-                        ${tasting.bubbleSize ? `<p><strong>Grana Bollicine:</strong> ${tasting.bubbleSize.replace('_', ' ')}</p>` : ''}
-                        ${tasting.bubblePersistence ? `<p><strong>Persistenza Bollicine:</strong> ${tasting.bubblePersistence.replace('_', ' ')}</p>` : ''}
-                    </div>
-                ` : ''}
                 
                 <div class="tasting-sections">
                     <div class="tasting-section">
                         <h4>Esame Visivo</h4>
-                        ${tasting.clarity ? `
+                        ${tasting.clarity && tasting.clarity !== 'na' ? `
                             <div class="subsection">
                                 <h5>Limpidezza</h5>
                                 <p>${tasting.clarity.replace('_', ' ')}</p>
+                            </div>
+                        ` : ''}
+                        ${tasting.whiteColor && tasting.whiteColor !== 'na' ? `
+                            <div class="subsection">
+                                <h5>Colore (Bianchi)</h5>
+                                <p>${tasting.whiteColor}</p>
+                            </div>
+                        ` : ''}
+                        ${tasting.roseColor && tasting.roseColor !== 'na' ? `
+                            <div class="subsection">
+                                <h5>Colore (Rosé)</h5>
+                                <p>${tasting.roseColor.replace('_', ' ')}</p>
+                            </div>
+                        ` : ''}
+                        ${tasting.redColor && tasting.redColor !== 'na' ? `
+                            <div class="subsection">
+                                <h5>Colore (Rossi)</h5>
+                                <p>${tasting.redColor}</p>
+                            </div>
+                        ` : ''}
+                        ${tasting.consistency && tasting.consistency !== 'na' ? `
+                            <div class="subsection">
+                                <h5>Consistenza</h5>
+                                <p>${tasting.consistency}</p>
+                            </div>
+                        ` : ''}
+                        ${(tasting.bubbleChains || tasting.bubbleSpeed || tasting.bubbleSize || tasting.bubblePersistence) ? `
+                            <div class="subsection">
+                                <h5>Effervescenza (Vini frizzanti e spumanti)</h5>
+                                ${tasting.bubbleChains && tasting.bubbleChains !== 'na' ? `<p><strong>Numero Catenelle:</strong> ${tasting.bubbleChains.replace('_', ' ')}</p>` : ''}
+                                ${tasting.bubbleSpeed && tasting.bubbleSpeed !== 'na' ? `<p><strong>Velocità Ascesa:</strong> ${tasting.bubbleSpeed}</p>` : ''}
+                                ${tasting.bubbleSize && tasting.bubbleSize !== 'na' ? `<p><strong>Grana Bollicine:</strong> ${tasting.bubbleSize.replace('_', ' ')}</p>` : ''}
+                                ${tasting.bubblePersistence && tasting.bubblePersistence !== 'na' ? `<p><strong>Persistenza Bollicine:</strong> ${tasting.bubblePersistence.replace('_', ' ')}</p>` : ''}
                             </div>
                         ` : ''}
                         ${tasting.visualNotes ? `
@@ -54,7 +73,7 @@ function loadTastings() {
                     
                     <div class="tasting-section">
                         <h4>Esame Olfattivo</h4>
-                        ${tasting.noseIntensity ? `
+                        ${tasting.noseIntensity && tasting.noseIntensity !== 'na' ? `
                             <div class="subsection">
                                 <h5>Intensità</h5>
                                 <p>${tasting.noseIntensity.replace('_', ' ')}</p>
@@ -66,13 +85,13 @@ function loadTastings() {
                                 <p>${tasting.descriptors.map(d => d.charAt(0).toUpperCase() + d.slice(1)).join(', ')}</p>
                             </div>
                         ` : ''}
-                        ${tasting.noseComplexity ? `
+                        ${tasting.noseComplexity && tasting.noseComplexity !== 'na' ? `
                             <div class="subsection">
                                 <h5>Complessità</h5>
                                 <p>${tasting.noseComplexity.replace('_', ' ')}</p>
                             </div>
                         ` : ''}
-                        ${tasting.noseQuality ? `
+                        ${tasting.noseQuality && tasting.noseQuality !== 'na' ? `
                             <div class="subsection">
                                 <h5>Qualità Olfattiva</h5>
                                 <p>${tasting.noseQuality.charAt(0).toUpperCase() + tasting.noseQuality.slice(1)}</p>
@@ -88,73 +107,73 @@ function loadTastings() {
                     
                     <div class="tasting-section">
                         <h4>Esame Gusto-Olfattivo</h4>
-                        ${tasting.sweetness ? `
+                        ${tasting.sweetness && tasting.sweetness !== 'na' ? `
                             <div class="subsection">
                                 <h5>Dolcezza</h5>
                                 <p>${tasting.sweetness.replace('_', ' ')}</p>
                             </div>
                         ` : ''}
-                        ${tasting.acidity ? `
+                        ${tasting.acidity && tasting.acidity !== 'na' ? `
                             <div class="subsection">
                                 <h5>Acidità</h5>
                                 <p>${tasting.acidity.replace('_', ' ')}</p>
                             </div>
                         ` : ''}
-                        ${tasting.alcohol ? `
+                        ${tasting.alcohol && tasting.alcohol !== 'na' ? `
                             <div class="subsection">
                                 <h5>Alcolicità</h5>
                                 <p>${tasting.alcohol.replace('_', ' ')}</p>
                             </div>
                         ` : ''}
-                        ${tasting.tannicity ? `
+                        ${tasting.tannicity && tasting.tannicity !== 'na' ? `
                             <div class="subsection">
                                 <h5>Tannicità</h5>
                                 <p>${tasting.tannicity.replace('_', ' ')}</p>
                             </div>
                         ` : ''}
-                        ${tasting.roundness ? `
+                        ${tasting.roundness && tasting.roundness !== 'na' ? `
                             <div class="subsection">
                                 <h5>Rotondità</h5>
                                 <p>${tasting.roundness.replace('_', ' ')}</p>
                             </div>
                         ` : ''}
-                        ${tasting.sapidity ? `
+                        ${tasting.sapidity && tasting.sapidity !== 'na' ? `
                             <div class="subsection">
                                 <h5>Sapidità</h5>
                                 <p>${tasting.sapidity.replace('_', ' ')}</p>
                             </div>
                         ` : ''}
-                        ${tasting.effervescence ? `
+                        ${tasting.effervescence && tasting.effervescence !== 'na' ? `
                             <div class="subsection">
                                 <h5>Effervescenza</h5>
                                 <p>${tasting.effervescence}</p>
                             </div>
                         ` : ''}
-                        ${tasting.tasteIntensity ? `
+                        ${tasting.tasteIntensity && tasting.tasteIntensity !== 'na' ? `
                             <div class="subsection">
                                 <h5>Intensità</h5>
                                 <p>${tasting.tasteIntensity.replace('_', ' ')}</p>
                             </div>
                         ` : ''}
-                        ${tasting.structure ? `
+                        ${tasting.structure && tasting.structure !== 'na' ? `
                             <div class="subsection">
                                 <h5>Struttura</h5>
                                 <p>${tasting.structure.replace('_', ' ')}</p>
                             </div>
                         ` : ''}
-                        ${tasting.balance ? `
+                        ${tasting.balance && tasting.balance !== 'na' ? `
                             <div class="subsection">
                                 <h5>Equilibrio</h5>
                                 <p>${tasting.balance.replace('_', ' ')}</p>
                             </div>
                         ` : ''}
-                        ${tasting.persistence ? `
+                        ${tasting.persistence && tasting.persistence !== 'na' ? `
                             <div class="subsection">
                                 <h5>Persistenza</h5>
                                 <p>${tasting.persistence.replace('_', ' ')}</p>
                             </div>
                         ` : ''}
-                        ${tasting.tasteQuality ? `
+                        ${tasting.tasteQuality && tasting.tasteQuality !== 'na' ? `
                             <div class="subsection">
                                 <h5>Qualità Gusto-Olfattiva</h5>
                                 <p>${tasting.tasteQuality.charAt(0).toUpperCase() + tasting.tasteQuality.slice(1)}</p>
@@ -170,19 +189,19 @@ function loadTastings() {
                     
                     <div class="tasting-section">
                         <h4>Considerazioni Finali</h4>
-                        ${tasting.evolutionaryState ? `
+                        ${tasting.evolutionaryState && tasting.evolutionaryState !== 'na' ? `
                             <div class="subsection">
                                 <h5>Stato Evolutivo</h5>
                                 <p>${tasting.evolutionaryState.charAt(0).toUpperCase() + tasting.evolutionaryState.slice(1)}</p>
                             </div>
                         ` : ''}
-                        ${tasting.harmony ? `
+                        ${tasting.harmony && tasting.harmony !== 'na' ? `
                             <div class="subsection">
                                 <h5>Armonia</h5>
                                 <p>${tasting.harmony.replace('_', ' ')}</p>
                             </div>
                         ` : ''}
-                        ${tasting.overallQuality ? `
+                        ${tasting.overallQuality && tasting.overallQuality !== 'na' ? `
                             <div class="subsection">
                                 <h5>Qualità Complessiva</h5>
                                 <p>${tasting.overallQuality.charAt(0).toUpperCase() + tasting.overallQuality.slice(1)}</p>
@@ -434,7 +453,6 @@ document.addEventListener('DOMContentLoaded', () => {
             harmony: document.querySelector('input[name="harmony"]:checked')?.value || '',
             overallQuality: document.querySelector('input[name="overall_quality"]:checked')?.value || '',
             notes: document.getElementById('notes').value || '',
-            rating: document.getElementById('rating').value || '',
             appearance: document.querySelector('input[name="appearance"]:checked')?.value || '',
             appearanceDeviation: document.querySelector('input[name="appearance_deviation"]').value || '0',
             intensity: document.querySelector('input[name="intensity"]:checked')?.value || '',
@@ -460,25 +478,33 @@ document.addEventListener('DOMContentLoaded', () => {
         // Debug logging
         console.log('Tasting data collected:', tastingData);
 
-        // Salva o aggiorna la degustazione
-        if (window.editingId) {
-            console.log('Updating existing tasting with ID:', window.editingId);
-            updateTasting(tastingData);
-            window.editingId = null;
-            form.querySelector('button[type="submit"]').textContent = 'Salva Degustazione';
-        } else {
-            console.log('Saving new tasting');
-            saveTasting(tastingData);
+        try {
+            // Salva o aggiorna la degustazione
+            if (window.editingId) {
+                console.log('Updating existing tasting with ID:', window.editingId);
+                updateTasting(tastingData);
+                window.editingId = null;
+                form.querySelector('button[type="submit"]').textContent = 'Salva Degustazione';
+            } else {
+                console.log('Saving new tasting');
+                saveTasting(tastingData);
+            }
+            
+            // Resetta il form
+            form.reset();
+            
+            // Aggiorna la lista delle degustazioni
+            loadTastings();
+            
+            // Mostra un messaggio di successo
+            alert('Degustazione salvata con successo!');
+            
+            // Debug logging
+            console.log('Form submission completed successfully');
+        } catch (error) {
+            console.error('Error saving tasting:', error);
+            alert('Si è verificato un errore durante il salvataggio della degustazione. Per favore riprova.');
         }
-        
-        // Resetta il form
-        form.reset();
-        
-        // Aggiorna la lista delle degustazioni
-        loadTastings();
-        
-        // Debug logging
-        console.log('Form submission completed');
     });
 
     function getTastingById(id) {
@@ -487,17 +513,32 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function saveTasting(tasting) {
-        let tastings = JSON.parse(localStorage.getItem('wineTastings')) || [];
-        tastings.push(tasting);
-        localStorage.setItem('wineTastings', JSON.stringify(tastings));
+        try {
+            let tastings = JSON.parse(localStorage.getItem('wineTastings')) || [];
+            tastings.push(tasting);
+            localStorage.setItem('wineTastings', JSON.stringify(tastings));
+            console.log('Tasting saved successfully:', tasting);
+        } catch (error) {
+            console.error('Error in saveTasting:', error);
+            throw error;
+        }
     }
 
     function updateTasting(updatedTasting) {
-        let tastings = JSON.parse(localStorage.getItem('wineTastings')) || [];
-        const index = tastings.findIndex(t => t.id === updatedTasting.id);
-        if (index !== -1) {
-            tastings[index] = updatedTasting;
-            localStorage.setItem('wineTastings', JSON.stringify(tastings));
+        try {
+            let tastings = JSON.parse(localStorage.getItem('wineTastings')) || [];
+            const index = tastings.findIndex(t => t.id === updatedTasting.id);
+            if (index !== -1) {
+                tastings[index] = updatedTasting;
+                localStorage.setItem('wineTastings', JSON.stringify(tastings));
+                console.log('Tasting updated successfully:', updatedTasting);
+            } else {
+                console.error('Tasting not found for update:', updatedTasting.id);
+                throw new Error('Degustazione non trovata');
+            }
+        } catch (error) {
+            console.error('Error in updateTasting:', error);
+            throw error;
         }
     }
 
@@ -752,4 +793,286 @@ function deleteTasting(id) {
         localStorage.setItem('wineTastings', JSON.stringify(tastings));
         loadTastings();
     }
+}
+
+// Gestione del form di degustazione birre
+if (document.getElementById('tastingForm')) {
+    const form = document.getElementById('tastingForm');
+    const tastingsList = document.getElementById('tastingsList');
+    const exportButton = document.getElementById('exportButton');
+    const uploadAddBtn = document.getElementById('uploadAddBtn');
+    const uploadReplaceBtn = document.getElementById('uploadReplaceBtn');
+    const jsonFileInput = document.getElementById('jsonFile');
+
+    // Carica le degustazioni salvate all'avvio
+    let savedTastings = JSON.parse(localStorage.getItem('beerTastings')) || [];
+
+    // Funzione per salvare una nuova degustazione
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const formData = new FormData(form);
+        const tastingData = {
+            id: Date.now(),
+            date: new Date().toLocaleString(),
+            beerName: formData.get('beerName'),
+            beerType: formData.get('beerType'),
+            producer: formData.get('producer'),
+            origin: formData.get('origin'),
+            visual: {
+                foamColor: formData.get('foam_color'),
+                foamAppearance: formData.get('foam_appearance'),
+                foamPersistence: formData.get('foam_persistence'),
+                foamAdherence: formData.get('foam_adherence'),
+                clarity: formData.get('clarity'),
+                color: formData.get('color'),
+                notes: formData.get('visualNotes')
+            },
+            olfactory: {
+                intensity: formData.get('nose_intensity'),
+                descriptors: formData.getAll('descriptors'),
+                notes: formData.get('noseNotes')
+            },
+            taste: {
+                sweetness: formData.get('sweetness'),
+                bitterness: formData.get('bitterness'),
+                body: formData.get('body'),
+                carbonation: formData.get('carbonation'),
+                notes: formData.get('tasteNotes')
+            },
+            final: {
+                balance: formData.get('balance'),
+                overallQuality: formData.get('overall_quality'),
+                notes: formData.get('notes')
+            }
+        };
+
+        savedTastings.push(tastingData);
+        localStorage.setItem('beerTastings', JSON.stringify(savedTastings));
+        
+        displayTastings();
+        form.reset();
+    });
+
+    // Funzione per visualizzare le degustazioni salvate
+    function displayTastings() {
+        tastingsList.innerHTML = '';
+        savedTastings.forEach(tasting => {
+            const tastingElement = document.createElement('div');
+            tastingElement.className = 'tasting-card';
+            tastingElement.innerHTML = `
+                <div class="card-header">
+                    <div class="header-content">
+                        <h3>${tasting.beerName} - ${tasting.beerType}</h3>
+                        <span class="tasting-date">${tasting.date}</span>
+                    </div>
+                    <span class="expand-icon">▼</span>
+                </div>
+                <div class="card-content">
+                    <p><strong>Produttore:</strong> ${tasting.producer || 'N/A'}</p>
+                    <p><strong>Origine:</strong> ${tasting.origin || 'N/A'}</p>
+                    
+                    <div class="tasting-sections">
+                        <div class="tasting-section">
+                            <h4>Esame Visivo</h4>
+                            ${tasting.visual.foamColor && tasting.visual.foamColor !== 'na' ? `
+                                <div class="subsection">
+                                    <h5>Colore Schiuma</h5>
+                                    <p>${tasting.visual.foamColor.replace('_', ' ')}</p>
+                                </div>
+                            ` : ''}
+                            ${tasting.visual.foamAppearance && tasting.visual.foamAppearance !== 'na' ? `
+                                <div class="subsection">
+                                    <h5>Aspetto Schiuma</h5>
+                                    <p>${tasting.visual.foamAppearance.replace('_', ' ')}</p>
+                                </div>
+                            ` : ''}
+                            ${tasting.visual.foamPersistence && tasting.visual.foamPersistence !== 'na' ? `
+                                <div class="subsection">
+                                    <h5>Persistenza Schiuma</h5>
+                                    <p>${tasting.visual.foamPersistence.replace('_', ' ')}</p>
+                                </div>
+                            ` : ''}
+                            ${tasting.visual.foamAdherence && tasting.visual.foamAdherence !== 'na' ? `
+                                <div class="subsection">
+                                    <h5>Aderenza Schiuma</h5>
+                                    <p>${tasting.visual.foamAdherence.replace('_', ' ')}</p>
+                                </div>
+                            ` : ''}
+                            ${tasting.visual.clarity && tasting.visual.clarity !== 'na' ? `
+                                <div class="subsection">
+                                    <h5>Limpidezza</h5>
+                                    <p>${tasting.visual.clarity.replace('_', ' ')}</p>
+                                </div>
+                            ` : ''}
+                            ${tasting.visual.color && tasting.visual.color !== 'na' ? `
+                                <div class="subsection">
+                                    <h5>Colore</h5>
+                                    <p>${tasting.visual.color.replace('_', ' ')}</p>
+                                </div>
+                            ` : ''}
+                            ${tasting.visual.notes ? `
+                                <div class="subsection">
+                                    <h5>Note</h5>
+                                    <p>${tasting.visual.notes}</p>
+                                </div>
+                            ` : ''}
+                        </div>
+
+                        <div class="tasting-section">
+                            <h4>Esame Olfattivo</h4>
+                            ${tasting.olfactory.intensity && tasting.olfactory.intensity !== 'na' ? `
+                                <div class="subsection">
+                                    <h5>Intensità</h5>
+                                    <p>${tasting.olfactory.intensity.replace('_', ' ')}</p>
+                                </div>
+                            ` : ''}
+                            ${tasting.olfactory.descriptors && tasting.olfactory.descriptors.length > 0 ? `
+                                <div class="subsection">
+                                    <h5>Descrittori</h5>
+                                    <p>${tasting.olfactory.descriptors.map(d => d.charAt(0).toUpperCase() + d.slice(1)).join(', ')}</p>
+                                </div>
+                            ` : ''}
+                            ${tasting.olfactory.notes ? `
+                                <div class="subsection">
+                                    <h5>Note</h5>
+                                    <p>${tasting.olfactory.notes}</p>
+                                </div>
+                            ` : ''}
+                        </div>
+
+                        <div class="tasting-section">
+                            <h4>Esame Gustativo</h4>
+                            ${tasting.taste.sweetness && tasting.taste.sweetness !== 'na' ? `
+                                <div class="subsection">
+                                    <h5>Dolcezza</h5>
+                                    <p>${tasting.taste.sweetness.replace('_', ' ')}</p>
+                                </div>
+                            ` : ''}
+                            ${tasting.taste.bitterness && tasting.taste.bitterness !== 'na' ? `
+                                <div class="subsection">
+                                    <h5>Amarezza</h5>
+                                    <p>${tasting.taste.bitterness.replace('_', ' ')}</p>
+                                </div>
+                            ` : ''}
+                            ${tasting.taste.body && tasting.taste.body !== 'na' ? `
+                                <div class="subsection">
+                                    <h5>Corpo</h5>
+                                    <p>${tasting.taste.body.replace('_', ' ')}</p>
+                                </div>
+                            ` : ''}
+                            ${tasting.taste.carbonation && tasting.taste.carbonation !== 'na' ? `
+                                <div class="subsection">
+                                    <h5>Effervescenza</h5>
+                                    <p>${tasting.taste.carbonation.replace('_', ' ')}</p>
+                                </div>
+                            ` : ''}
+                            ${tasting.taste.notes ? `
+                                <div class="subsection">
+                                    <h5>Note</h5>
+                                    <p>${tasting.taste.notes}</p>
+                                </div>
+                            ` : ''}
+                        </div>
+
+                        <div class="tasting-section">
+                            <h4>Considerazioni Finali</h4>
+                            ${tasting.final.balance && tasting.final.balance !== 'na' ? `
+                                <div class="subsection">
+                                    <h5>Equilibrio</h5>
+                                    <p>${tasting.final.balance.replace('_', ' ')}</p>
+                                </div>
+                            ` : ''}
+                            ${tasting.final.overallQuality && tasting.final.overallQuality !== 'na' ? `
+                                <div class="subsection">
+                                    <h5>Qualità Complessiva</h5>
+                                    <p>${tasting.final.overallQuality.replace('_', ' ')}</p>
+                                </div>
+                            ` : ''}
+                            ${tasting.final.notes ? `
+                                <div class="subsection">
+                                    <h5>Note</h5>
+                                    <p>${tasting.final.notes}</p>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+
+                    <div class="card-buttons">
+                        <button onclick="deleteTasting(${tasting.id})" class="delete-btn">Elimina</button>
+                    </div>
+                </div>
+            `;
+            
+            // Aggiungi l'event listener per l'espansione/compressione
+            tastingElement.addEventListener('click', (e) => {
+                // Non espandere/compressione se si clicca sui pulsanti
+                if (e.target.tagName === 'BUTTON') return;
+                
+                // Toggle della classe expanded
+                tastingElement.classList.toggle('expanded');
+            });
+            
+            tastingsList.appendChild(tastingElement);
+        });
+    }
+
+    // Funzione per eliminare una degustazione
+    window.deleteTasting = function(id) {
+        savedTastings = savedTastings.filter(tasting => tasting.id !== id);
+        localStorage.setItem('beerTastings', JSON.stringify(savedTastings));
+        displayTastings();
+    };
+
+    // Funzione per esportare le degustazioni
+    exportButton.addEventListener('click', () => {
+        const dataStr = JSON.stringify(savedTastings, null, 2);
+        const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+        
+        const exportFileDefaultName = 'degustazioni_birre.json';
+        
+        const linkElement = document.createElement('a');
+        linkElement.setAttribute('href', dataUri);
+        linkElement.setAttribute('download', exportFileDefaultName);
+        linkElement.click();
+    });
+
+    // Funzione per caricare le degustazioni
+    function loadTastings(file, shouldReplace = false) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const loadedTastings = JSON.parse(e.target.result);
+                if (shouldReplace) {
+                    savedTastings = loadedTastings;
+                } else {
+                    savedTastings = [...savedTastings, ...loadedTastings];
+                }
+                localStorage.setItem('beerTastings', JSON.stringify(savedTastings));
+                displayTastings();
+            } catch (error) {
+                alert('Errore nel caricamento del file: ' + error.message);
+            }
+        };
+        reader.readAsText(file);
+    }
+
+    // Gestione del caricamento file
+    uploadAddBtn.addEventListener('click', () => {
+        jsonFileInput.click();
+    });
+
+    uploadReplaceBtn.addEventListener('click', () => {
+        jsonFileInput.click();
+    });
+
+    jsonFileInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) {
+            const shouldReplace = e.target.files[0].name.includes('replace');
+            loadTastings(e.target.files[0], shouldReplace);
+        }
+    });
+
+    // Visualizza le degustazioni all'avvio
+    displayTastings();
 } 

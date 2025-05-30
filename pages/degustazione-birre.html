@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#4a90e2">
+    <meta name="description" content="App per la degustazione e valutazione delle birre">
+    <link rel="manifest" href="../manifest.json">
+    <link rel="apple-touch-icon" href="../icons/icon-192x192.png">
+    <title>Degustazione Birre</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Degustazione Birre</h1>
+            <a href="../index.html" class="back-button">← Torna alla Home</a>
+        </div>
+        
+        <form id="tastingForm">
+            <div class="form-group">
+                <label for="beerName">Nome della Birra:</label>
+                <input type="text" id="beerName" required>
+            </div>
+
+            <div class="form-group">
+                <label for="beerType">Tipo di Birra:</label>
+                <select id="beerType" required>
+                    <option value="">Seleziona...</option>
+                    <option value="lager">Lager</option>
+                    <option value="pilsner">Pilsner</option>
+                    <option value="weiss">Weiss</option>
+                    <option value="ale">Ale</option>
+                    <option value="stout">Stout</option>
+                    <option value="porter">Porter</option>
+                    <option value="ipa">IPA</option>
+                    <option value="altra">Altra</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="producer">Produttore:</label>
+                <input type="text" id="producer">
+            </div>
+
+            <div class="form-group">
+                <label for="origin">Origine:</label>
+                <input type="text" id="origin">
+            </div>
+
+            <div class="form-section">
+                <h3>Scheda Analitico-Descrittiva</h3>
+                
+                <div class="tasting-section">
+                    <h4>Esame Visivo</h4>
+                    <div class="subsection">
+                        <label>Colore Schiuma:</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="radio" name="foam_color" value="bianco">
+                                Bianco
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="foam_color" value="avorio">
+                                Avorio
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="foam_color" value="rosato">
+                                Rosato
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="foam_color" value="beige">
+                                Beige
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="foam_color" value="marrone">
+                                Marrone
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="foam_color" value="na">
+                                N/A
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <label>Aspetto Schiuma:</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="radio" name="foam_appearance" value="grossolana">
+                                Grossolana
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="foam_appearance" value="mediamente_fine">
+                                Mediamente Fine
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="foam_appearance" value="fine">
+                                Fine
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="foam_appearance" value="na">
+                                N/A
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <label>Persistenza Schiuma:</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="radio" name="foam_persistence" value="evanescente">
+                                Evanescente
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="foam_persistence" value="mediamente_persistente">
+                                Mediamente Persistente
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="foam_persistence" value="persistente">
+                                Persistente
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="foam_persistence" value="na">
+                                N/A
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <label>Aderenza allo Stile Schiuma:</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="radio" name="foam_adherence" value="poco_aderente">
+                                Poco Aderente
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="foam_adherence" value="mediamente_aderente">
+                                Mediamente Aderente
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="foam_adherence" value="aderente">
+                                Aderente
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="foam_adherence" value="na">
+                                N/A
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <label>Limpidezza:</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="radio" name="clarity" value="velata">
+                                Velata
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="clarity" value="limpida">
+                                Limpida
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="clarity" value="cristallina">
+                                Cristallina
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="clarity" value="na">
+                                N/A
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <label>Colore:</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="radio" name="color" value="paglierino">
+                                Paglierino
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="color" value="dorato">
+                                Dorato
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="color" value="ambrato">
+                                Ambrato
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="color" value="rosato">
+                                Rosato
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="color" value="ramato">
+                                Ramato
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="color" value="marrone">
+                                Marrone
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="color" value="nero">
+                                Nero
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="color" value="na">
+                                N/A
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <label for="visualNotes">Note Visive:</label>
+                        <textarea id="visualNotes" rows="3" placeholder="Colore, limpidezza, schiuma, effervescenza..."></textarea>
+                    </div>
+                </div>
+
+                <div class="tasting-section">
+                    <h4>Esame Olfattivo</h4>
+                    <div class="subsection">
+                        <label>Intensità:</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="radio" name="nose_intensity" value="moderatamente_intensa">
+                                Moderatamente Intensa
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="nose_intensity" value="intensa">
+                                Intensa
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="nose_intensity" value="molto_intensa">
+                                Molto Intensa
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="nose_intensity" value="na">
+                                N/A
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <label>Descrittori:</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="descriptors" value="fruttato">
+                                Fruttato
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="descriptors" value="floreale">
+                                Floreale
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="descriptors" value="maltato">
+                                Maltato
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="descriptors" value="affumicato">
+                                Affumicato
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="descriptors" value="vinoso">
+                                Vinoso
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="descriptors" value="tostato">
+                                Tostato
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="descriptors" value="animale">
+                                Animale
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="descriptors" value="lattico">
+                                Lattico
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="descriptors" value="speziato">
+                                Speziato
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="descriptors" value="vegetale">
+                                Vegetale
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="descriptors" value="etereo">
+                                Etereo
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="descriptors" value="acetico">
+                                Acetico
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <label for="noseNotes">Note Olfattive:</label>
+                        <textarea id="noseNotes" rows="3" placeholder="Profumi, aromi, intensità..."></textarea>
+                    </div>
+                </div>
+
+                <div class="tasting-section">
+                    <h4>Esame Gustativo</h4>
+                    <div class="subsection">
+                        <label>Dolcezza:</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="radio" name="sweetness" value="secca">
+                                Secca
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="sweetness" value="semisecca">
+                                Semisecca
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="sweetness" value="dolce">
+                                Dolce
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="sweetness" value="na">
+                                N/A
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <label>Amarezza:</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="radio" name="bitterness" value="leggera">
+                                Leggera
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="bitterness" value="moderata">
+                                Moderata
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="bitterness" value="intensa">
+                                Intensa
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="bitterness" value="na">
+                                N/A
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <label>Corpo:</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="radio" name="body" value="leggero">
+                                Leggero
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="body" value="medio">
+                                Medio
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="body" value="pieno">
+                                Pieno
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="body" value="na">
+                                N/A
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <label>Effervescenza:</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="radio" name="carbonation" value="bassa">
+                                Bassa
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="carbonation" value="media">
+                                Media
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="carbonation" value="alta">
+                                Alta
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="carbonation" value="na">
+                                N/A
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <label for="tasteNotes">Note Gustative:</label>
+                        <textarea id="tasteNotes" rows="3" placeholder="Sapore, struttura, amarezza, dolcezza..."></textarea>
+                    </div>
+                </div>
+
+                <div class="tasting-section">
+                    <h4>Considerazioni Finali</h4>
+                    <div class="subsection">
+                        <label>Equilibrio:</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="radio" name="balance" value="squilibrato">
+                                Squilibrato
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="balance" value="moderatamente_equilibrato">
+                                Moderatamente Equilibrato
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="balance" value="equilibrato">
+                                Equilibrato
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="balance" value="na">
+                                N/A
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <label>Qualità Complessiva:</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="radio" name="overall_quality" value="accettabile">
+                                Accettabile
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="overall_quality" value="buono">
+                                Buono
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="overall_quality" value="distinto">
+                                Distinto
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="overall_quality" value="ottimo">
+                                Ottimo
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="overall_quality" value="eccellente">
+                                Eccellente
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="overall_quality" value="na">
+                                N/A
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <label for="notes">Note Finali:</label>
+                        <textarea id="notes" rows="3" placeholder="Giudizio complessivo, abbinamenti consigliati..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit">Salva Degustazione</button>
+        </form>
+
+        <div id="savedTastings">
+            <div class="export-section">
+                <h2>Degustazioni Salvate</h2>
+                <div class="button-group">
+                    <button id="exportButton" class="export-btn">Esporta Tutte le Degustazioni</button>
+                    <div class="upload-section">
+                        <input type="file" id="jsonFile" accept=".json" style="display: none;">
+                        <button id="uploadAddBtn" class="upload-btn">Carica e Aggiungi</button>
+                        <button id="uploadReplaceBtn" class="upload-btn">Carica e Sostituisci</button>
+                    </div>
+                </div>
+            </div>
+            <div id="tastingsList"></div>
+        </div>
+    </div>
+    <script src="../script.js"></script>
+    <script>
+        // Registra il service worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registrato con successo:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('Registrazione ServiceWorker fallita:', error);
+                    });
+            });
+        }
+    </script>
+</body>
+</html> 
