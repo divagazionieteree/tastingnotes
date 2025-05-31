@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#4a90e2">
+    <meta name="description" content="App per l'abbinamento tra cibi e birre">
+    <link rel="manifest" href="../manifest.json">
+    <link rel="apple-touch-icon" href="../icons/icon-192x192.png">
+    <title>Abbinamento Cibo-Birra</title>
+    <link rel="stylesheet" href="../styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .rating-input {
+            width: 60px;
+            padding: 5px;
+            margin-left: 10px;
+        }
+        .food-section, .beer-section, .evaluation-section {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .food-section h3, .beer-section h3, .evaluation-section h3 {
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        .rating-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .rating-group label {
+            flex: 1;
+        }
+        .form-header {
+            background: #e0e0e0;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        .form-header .form-group {
+            margin-bottom: 15px;
+        }
+        .form-header label {
+            color: #2c3e50;
+            font-weight: bold;
+        }
+        .form-header input, .form-header select {
+            background: white;
+            border: none;
+            padding: 8px;
+            border-radius: 4px;
+            width: 100%;
+        }
+        .form-header input:focus, .form-header select:focus {
+            outline: 2px solid #4a90e2;
+        }
+        .evaluation-group {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .evaluation-group > label {
+            min-width: 150px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            flex: 1;
+        }
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+        .radio-group input[type="radio"] {
+            margin: 0;
+        }
+        .radar-chart-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #fff;
+            border-radius: 8px;
+            margin: 20px 0;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Abbinamento Cibo-Birra</h1>
+            <a href="../index.html" class="back-button">← Torna alla Home</a>
+        </div>
+        
+        <form id="pairingForm">
+            <div class="form-header">
+                <div class="form-group">
+                    <label for="pairingName">Nome Abbinamento:</label>
+                    <input type="text" id="pairingName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="foodName">Cibo/Preparazione:</label>
+                    <input type="text" id="foodName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="beerStyle">Denominazione Birra:</label>
+                    <select id="beerStyle" required>
+                        <option value="">Seleziona...</option>
+                        <option value="lager">Lager</option>
+                        <option value="pilsner">Pilsner</option>
+                        <option value="weiss">Weiss</option>
+                        <option value="ale">Ale</option>
+                        <option value="stout">Stout</option>
+                        <option value="porter">Porter</option>
+                        <option value="ipa">IPA</option>
+                        <option value="altra">Altra</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="beerName">Nome Birra:</label>
+                    <input type="text" id="beerName" required>
+                </div>
+            </div>
+
+            <div class="food-section">
+                <h3>Caratteristiche del Cibo</h3>
+                <div class="rating-group">
+                    <label for="sweetTendency">Tendenza Dolce:</label>
+                    <input type="number" id="sweetTendency" class="rating-input" min="0" max="10" value="0">
+                </div>
+                <div class="rating-group">
+                    <label for="fattiness">Grassezza:</label>
+                    <input type="number" id="fattiness" class="rating-input" min="0" max="10" value="0">
+                </div>
+                <div class="rating-group">
+                    <label for="succulence">Succulenza:</label>
+                    <input type="number" id="succulence" class="rating-input" min="0" max="10" value="0">
+                </div>
+                <div class="rating-group">
+                    <label for="untuosity">Untuosità:</label>
+                    <input type="number" id="untuosity" class="rating-input" min="0" max="10" value="0">
+                </div>
+                <div class="rating-group">
+                    <label for="sapidity">Sapidità:</label>
+                    <input type="number" id="sapidity" class="rating-input" min="0" max="10" value="0">
+                </div>
+                <div class="rating-group">
+                    <label for="spiciness">Piccantezza:</label>
+                    <input type="number" id="spiciness" class="rating-input" min="0" max="10" value="0">
+                </div>
+                <div class="rating-group">
+                    <label for="bitterTendency">Tendenza Amarognola:</label>
+                    <input type="number" id="bitterTendency" class="rating-input" min="0" max="10" value="0">
+                </div>
+                <div class="rating-group">
+                    <label for="acidTendency">Tendenza Acida:</label>
+                    <input type="number" id="acidTendency" class="rating-input" min="0" max="10" value="0">
+                </div>
+                <div class="rating-group">
+                    <label for="sweetness">Dolcezza:</label>
+                    <input type="number" id="sweetness" class="rating-input" min="0" max="10" value="0">
+                </div>
+                <div class="rating-group">
+                    <label for="tastePersistence">Persistenza Gusto Olfattiva:</label>
+                    <input type="number" id="tastePersistence" class="rating-input" min="0" max="10" value="0">
+                </div>
+                <div class="rating-group">
+                    <label for="tasteIntensity">Intensità Gusto Olfattiva:</label>
+                    <input type="number" id="tasteIntensity" class="rating-input" min="0" max="10" value="0">
+                </div>
+            </div>
+
+            <div class="beer-section">
+                <h3>Caratteristiche della Birra</h3>
+                <div class="rating-group">
+                    <label for="beerSweetness">Dolcezza:</label>
+                    <input type="number" id="beerSweetness" class="rating-input" min="0" max="10" value="0">
+                </div>
+                <div class="rating-group">
+                    <label for="beerSoftness">Morbidezza:</label>
+                    <input type="number" id="beerSoftness" class="rating-input" min="0" max="10" value="0">
+                </div>
+                <div class="rating-group">
+                    <label for="beerTasteIntensity">Intensità Gusto-Olfattiva:</label>
+                    <input type="number" id="beerTasteIntensity" class="rating-input" min="0" max="10" value="0">
+                </div>
+                <div class="rating-group">
+                    <label for="beerTastePersistence">Persistenza Gusto-Olfattiva:</label>
+                    <input type="number" id="beerTastePersistence" class="rating-input" min="0" max="10" value="0">
+                </div>
+                <div class="rating-group">
+                    <label for="beerAlcohol">Alcolicità:</label>
+                    <input type="number" id="beerAlcohol" class="rating-input" min="0" max="10" value="0">
+                </div>
+                <div class="rating-group">
+                    <label for="beerDryness">Secchezza:</label>
+                    <input type="number" id="beerDryness" class="rating-input" min="0" max="10" value="0">
+                </div>
+                <div class="rating-group">
+                    <label for="beerAcidity">Acidità:</label>
+                    <input type="number" id="beerAcidity" class="rating-input" min="0" max="10" value="0">
+                </div>
+                <div class="rating-group">
+                    <label for="beerBitterness">Amaro:</label>
+                    <input type="number" id="beerBitterness" class="rating-input" min="0" max="10" value="0">
+                </div>
+                <div class="rating-group">
+                    <label for="beerSparkling">Frizzantezza:</label>
+                    <input type="number" id="beerSparkling" class="rating-input" min="0" max="10" value="0">
+                </div>
+                <div class="rating-group">
+                    <label for="beerSapidity">Sapidità:</label>
+                    <input type="number" id="beerSapidity" class="rating-input" min="0" max="10" value="0">
+                </div>
+            </div>
+
+            <!-- Radar Chart for Cibo/Birra Characteristics -->
+            <div class="radar-chart-container">
+                <canvas id="pairingRadarChart" width="400" height="400"></canvas>
+            </div>
+
+            <div class="evaluation-section">
+                <h3>Valutazione Abbinamento</h3>
+                <div class="evaluation-group">
+                    <label>Struttura del Cibo:</label>
+                    <div class="radio-group">
+                        <label>
+                            <input type="radio" name="foodStructure" value="poco_strutturato" required>
+                            Poco Strutturato
+                        </label>
+                        <label>
+                            <input type="radio" name="foodStructure" value="strutturato">
+                            Strutturato
+                        </label>
+                        <label>
+                            <input type="radio" name="foodStructure" value="molto_strutturato">
+                            Molto Strutturato
+                        </label>
+                    </div>
+                </div>
+                <div class="evaluation-group">
+                    <label>Struttura della Birra:</label>
+                    <div class="radio-group">
+                        <label>
+                            <input type="radio" name="beerStructure" value="fluida" required>
+                            Fluida(2)/Di medio Corpo
+                        </label>
+                        <label>
+                            <input type="radio" name="beerStructure" value="corpo_pieno">
+                            Di corpo Pieno
+                        </label>
+                        <label>
+                            <input type="radio" name="beerStructure" value="robusta">
+                            Robusta
+                        </label>
+                    </div>
+                </div>
+                <div class="evaluation-group">
+                    <label>Affinità Aromatica:</label>
+                    <div class="radio-group">
+                        <label>
+                            <input type="radio" name="aromaticAffinity" value="poco_affine" required>
+                            Poco Affine
+                        </label>
+                        <label>
+                            <input type="radio" name="aromaticAffinity" value="mediamente_affine">
+                            Mediamente Affine
+                        </label>
+                        <label>
+                            <input type="radio" name="aromaticAffinity" value="affine">
+                            Affine
+                        </label>
+                    </div>
+                </div>
+                <div class="evaluation-group">
+                    <label>Abbinamento:</label>
+                    <div class="radio-group">
+                        <label>
+                            <input type="radio" name="pairingHarmony" value="poco_armonico" required>
+                            Poco Armonico
+                        </label>
+                        <label>
+                            <input type="radio" name="pairingHarmony" value="mediamente_armonico">
+                            Mediamente Armonico
+                        </label>
+                        <label>
+                            <input type="radio" name="pairingHarmony" value="armonico">
+                            Armonico
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit">Salva Abbinamento</button>
+        </form>
+
+        <div id="savedPairings">
+            <div class="export-section">
+                <h2>Abbinamenti Salvati</h2>
+                <div class="button-group">
+                    <button id="exportButton" class="export-btn">Esporta Tutti gli Abbinamenti</button>
+                    <div class="upload-section">
+                        <input type="file" id="jsonFile" accept=".json" style="display: none;">
+                        <button id="uploadAddBtn" class="upload-btn">Carica e Aggiungi</button>
+                        <button id="uploadReplaceBtn" class="upload-btn">Carica e Sostituisci</button>
+                    </div>
+                </div>
+            </div>
+            <div id="pairingsList"></div>
+        </div>
+    </div>
+    <script src="../script.js"></script>
+    <script>
+        // Registra il service worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registrato con successo:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('Registrazione ServiceWorker fallita:', error);
+                    });
+            });
+        }
+    </script>
+</body>
+</html> 

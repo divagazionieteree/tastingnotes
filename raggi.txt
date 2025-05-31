@@ -1,0 +1,24 @@
+Raggio  1: Birra: Dolcezza, Morbidezza
+Raggio  2: Birra: Intensità Gusto-Olfattiva, Persistenza Gusto-Olfattiva
+Raggio  3: 
+Raggio  4: 
+Raggio  5: Cibo: Succulenza
+Raggio  6: Cibo: Untuosità 
+Raggio  7: 
+Raggio  8: 
+Raggio  9: Birra: Acidità, Amaro
+Raggio 10: Birra: Frizzantezza, Sapidità
+Raggio 11: 
+Raggio 12:  
+Raggio 13: Cibo: Intensità Gusto-Olfattiva, Persistenza Gusto-Olfattiva
+Raggio 14: Cibo: Sapidità, Piccantezza, Tendenza Amarognola, Tendenza Acida, Dolcezza
+Raggio 15: 
+Raggio 16: 
+Raggio 17: Birra: Secchezza
+Raggio 18: Birra: Alcolicità
+Raggio 19: 
+Raggio 20: 
+Raggio 21: Cibo: Grassezza 
+Raggio 22: Cibo: Tendenza Dolce
+Raggio 23: 
+Raggio 24: 

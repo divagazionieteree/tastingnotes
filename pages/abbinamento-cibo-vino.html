@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#4a90e2">
+    <meta name="description" content="Guida agli abbinamenti tra cibi e vini">
+    <title>Abbinamento Cibo-Vino</title>
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .pairing-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .pairing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .pairing-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .pairing-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .pairing-card h3 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        .pairing-card p {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .pairing-card ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .pairing-card li {
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .pairing-card li:before {
+            content: "•";
+            color: #4a90e2;
+            position: absolute;
+            left: 0;
+        }
+
+        .header {
+            text-align: center;
+            padding: 2rem;
+            background: #4a90e2;
+            color: white;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+
+        .header p {
+            margin: 1rem 0 0;
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .back-button {
+            display: inline-block;
+            background: #4a90e2;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background 0.3s ease;
+            margin-bottom: 2rem;
+        }
+
+        .back-button:hover {
+            background: #357abd;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Abbinamento Cibo-Vino</h1>
+        <p>Scopri i migliori abbinamenti per esaltare i sapori</p>
+    </div>
+
+    <div class="pairing-container">
+        <a href="../index.html" class="back-button">← Torna alla Home</a>
+
+        <div class="pairing-grid">
+            <div class="pairing-card">
+                <h3>Pesce e Frutti di Mare</h3>
+                <p>Abbinamenti ideali per piatti di mare:</p>
+                <ul>
+                    <li>Pesce bianco: Pinot Grigio, Vermentino</li>
+                    <li>Pesce azzurro: Verdicchio, Soave</li>
+                    <li>Frutti di mare: Prosecco, Franciacorta</li>
+                    <li>Pesce grasso: Chardonnay, Sauvignon Blanc</li>
+                </ul>
+            </div>
+
+            <div class="pairing-card">
+                <h3>Carne Bianca</h3>
+                <p>Vini perfetti per pollo e tacchino:</p>
+                <ul>
+                    <li>Pollo arrosto: Chardonnay, Pinot Bianco</li>
+                    <li>Tacchino: Pinot Nero, Barbera</li>
+                    <li>Pollo in umido: Montepulciano, Sangiovese</li>
+                    <li>Pollo piccante: Gewürztraminer, Riesling</li>
+                </ul>
+            </div>
+
+            <div class="pairing-card">
+                <h3>Carne Rossa</h3>
+                <p>Abbinamenti per carni rosse:</p>
+                <ul>
+                    <li>Manzo: Barolo, Brunello di Montalcino</li>
+                    <li>Maiale: Chianti, Montepulciano</li>
+                    <li>Agnello: Amarone, Primitivo</li>
+                    <li>Selvaggina: Sagrantino, Aglianico</li>
+                </ul>
+            </div>
+
+            <div class="pairing-card">
+                <h3>Formaggi</h3>
+                <p>Vini per i formaggi:</p>
+                <ul>
+                    <li>Formaggi freschi: Prosecco, Pinot Grigio</li>
+                    <li>Formaggi stagionati: Amarone, Barolo</li>
+                    <li>Formaggi erborinati: Sauternes, Passito</li>
+                    <li>Formaggi di capra: Sauvignon Blanc, Vermentino</li>
+                </ul>
+            </div>
+
+            <div class="pairing-card">
+                <h3>Dolci</h3>
+                <p>Vini per i dessert:</p>
+                <ul>
+                    <li>Cioccolato: Recioto, Passito</li>
+                    <li>Frutta: Moscato d'Asti, Brachetto</li>
+                    <li>Dolci secchi: Vin Santo, Marsala</li>
+                    <li>Crema: Asti Spumante, Prosecco</li>
+                </ul>
+            </div>
+
+            <div class="pairing-card">
+                <h3>Pasta e Risotti</h3>
+                <p>Abbinamenti per primi piatti:</p>
+                <ul>
+                    <li>Pasta al pomodoro: Chianti, Montepulciano</li>
+                    <li>Pasta al pesce: Vermentino, Pinot Grigio</li>
+                    <li>Risotto ai funghi: Barolo, Barbaresco</li>
+                    <li>Risotto ai frutti di mare: Soave, Verdicchio</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

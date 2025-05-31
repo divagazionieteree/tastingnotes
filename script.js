@@ -795,241 +795,375 @@ function deleteTasting(id) {
     }
 }
 
-// Gestione del form di degustazione birre
-if (document.getElementById('tastingForm')) {
-    const form = document.getElementById('tastingForm');
-    const tastingsList = document.getElementById('tastingsList');
+// === GRAFICO RADAR PER ABBINAMENTO CIBO-BIRRA ===
+if (document.getElementById('pairingRadarChart')) {
+    // Etichette 26 raggi (con separazione Succulenza/Untuosità e accorpamento Frizzantezza/Sapidità solo nel grafico)
+    const radarLabels = [
+        'Birra: Dolcezza, Morbidezza', // 0
+        'Birra: Intensità Gusto-Olfattiva, Persistenza Gusto-Olfattiva', // 1
+        '', '',
+        'Cibo: Succulenza', // 4
+        'Cibo: Untuosità', // 5
+        '', '',
+        'Birra: Acidità, Amaro', // 8
+        'Birra: Frizzantezza, Sapidità', // 9 (accorpato solo nel grafico)
+        '', '',
+        'Cibo: Intensità Gusto-Olfattiva, Persistenza Gusto-Olfattiva', // 12
+        'Cibo: Sapidità, Piccantezza, Tendenza Amarognola, Tendenza Acida, Dolcezza', // 13
+        '', '',
+        'Birra: Secchezza', // 16
+        'Birra: Alcolicità', // 17
+        '', '',
+        'Cibo: Grassezza', // 20
+        'Cibo: Tendenza Dolce', // 21
+        '', ''
+    ];
+    // Indici dei punti validi per ciascun gruppo
+    const foodIdx = [4,5,12,13,20,21];
+    const beerIdx = [0,1,8,9,16,17];
+
+    function getRadarFoodValues() {
+        const arr = Array(radarLabels.length).fill(null);
+        arr[4] = parseInt(document.getElementById('succulence').value) || 0;
+        arr[5] = parseInt(document.getElementById('untuosity').value) || 0;
+        arr[12] = Math.max(
+            parseInt(document.getElementById('tasteIntensity').value) || 0,
+            parseInt(document.getElementById('tastePersistence').value) || 0
+        );
+        arr[13] = Math.max(
+            parseInt(document.getElementById('sapidity').value) || 0,
+            parseInt(document.getElementById('spiciness').value) || 0,
+            parseInt(document.getElementById('bitterTendency').value) || 0,
+            parseInt(document.getElementById('acidTendency').value) || 0,
+            parseInt(document.getElementById('sweetness').value) || 0
+        );
+        arr[20] = parseInt(document.getElementById('fattiness').value) || 0;
+        arr[21] = parseInt(document.getElementById('sweetTendency').value) || 0;
+        return arr;
+    }
+    function getRadarBeerValues() {
+        const arr = Array(radarLabels.length).fill(null);
+        arr[0] = Math.max(
+            parseInt(document.getElementById('beerSweetness').value) || 0,
+            parseInt(document.getElementById('beerSoftness').value) || 0
+        );
+        arr[1] = Math.max(
+            parseInt(document.getElementById('beerTasteIntensity').value) || 0,
+            parseInt(document.getElementById('beerTastePersistence').value) || 0
+        );
+        arr[8] = Math.max(
+            parseInt(document.getElementById('beerAcidity').value) || 0,
+            parseInt(document.getElementById('beerBitterness').value) || 0
+        );
+        arr[9] = Math.max(
+            parseInt(document.getElementById('beerSparkling').value) || 0,
+            parseInt(document.getElementById('beerSapidity').value) || 0
+        );
+        arr[16] = parseInt(document.getElementById('beerDryness').value) || 0;
+        arr[17] = parseInt(document.getElementById('beerAlcohol').value) || 0;
+        return arr;
+    }
+    // Plugin per disegnare i poligoni chiusi custom
+    const closedPolygonPlugin = {
+        id: 'closedPolygons',
+        afterDatasetsDraw(chart, args, opts) {
+            const {ctx, chartArea, scales} = chart;
+            const rScale = chart.scales.r;
+            if (!rScale) return;
+            // Cibo
+            const foodVals = getRadarFoodValues();
+            ctx.save();
+            ctx.beginPath();
+            let first = true;
+            foodIdx.forEach(idx => {
+                const v = foodVals[idx];
+                if (v !== null && v !== undefined) {
+                    const pt = rScale.getPointPositionForValue(idx, v);
+                    if (first) {
+                        ctx.moveTo(pt.x, pt.y);
+                        first = false;
+                    } else {
+                        ctx.lineTo(pt.x, pt.y);
+                    }
+                }
+            });
+            // Chiudi il poligono
+            const pt0 = rScale.getPointPositionForValue(foodIdx[0], foodVals[foodIdx[0]]);
+            ctx.lineTo(pt0.x, pt0.y);
+            ctx.closePath();
+            ctx.globalAlpha = 0.25;
+            ctx.fillStyle = 'rgba(70,130,180,1)';
+            ctx.fill();
+            ctx.globalAlpha = 1;
+            ctx.strokeStyle = 'rgba(70,130,180,1)';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            ctx.restore();
+            // Birra
+            const beerVals = getRadarBeerValues();
+            ctx.save();
+            ctx.beginPath();
+            first = true;
+            beerIdx.forEach(idx => {
+                const v = beerVals[idx];
+                if (v !== null && v !== undefined) {
+                    const pt = rScale.getPointPositionForValue(idx, v);
+                    if (first) {
+                        ctx.moveTo(pt.x, pt.y);
+                        first = false;
+                    } else {
+                        ctx.lineTo(pt.x, pt.y);
+                    }
+                }
+            });
+            // Chiudi il poligono
+            const ptb0 = rScale.getPointPositionForValue(beerIdx[0], beerVals[beerIdx[0]]);
+            ctx.lineTo(ptb0.x, ptb0.y);
+            ctx.closePath();
+            ctx.globalAlpha = 0.25;
+            ctx.fillStyle = 'rgba(255,99,132,1)';
+            ctx.fill();
+            ctx.globalAlpha = 1;
+            ctx.strokeStyle = 'rgba(255,99,132,1)';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            ctx.restore();
+        }
+    };
+
+    // Inizializza il grafico radar
+    const ctx = document.getElementById('pairingRadarChart').getContext('2d');
+    const radarChart = new Chart(ctx, {
+        type: 'radar',
+        data: {
+            labels: radarLabels,
+            datasets: [
+                {
+                    label: 'Cibo',
+                    data: getRadarFoodValues(),
+                    backgroundColor: 'rgba(70, 130, 180, 0.0)', // trasparente, poligono custom
+                    borderColor: 'rgba(70, 130, 180, 0.0)',
+                    pointBackgroundColor: 'rgba(70, 130, 180, 1)',
+                    borderWidth: 2
+                },
+                {
+                    label: 'Birra',
+                    data: getRadarBeerValues(),
+                    backgroundColor: 'rgba(255, 99, 132, 0.0)',
+                    borderColor: 'rgba(255, 99, 132, 0.0)',
+                    pointBackgroundColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 2
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: false
+                }
+            },
+            scales: {
+                r: {
+                    min: 0,
+                    max: 10,
+                    ticks: {
+                        stepSize: 2
+                    },
+                    startAngle: -6.5,
+                    pointLabels: {
+                        font: function(context) {
+                            // Indici dei raggi cibo
+                            const boldIdx = [4,5,12,13,20,21];
+                            if (boldIdx.includes(context.index)) {
+                                return {size: 14, weight: 'bold'};
+                            } else {
+                                return {size: 14, weight: 'normal'};
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        plugins: [closedPolygonPlugin]
+    });
+
+    // Aggiorna il grafico quando cambiano i valori
+    const foodInputs = [
+        'sweetTendency','fattiness','succulence','sapidity','spiciness','bitterTendency','acidTendency','sweetness','tastePersistence','tasteIntensity'
+    ];
+    const beerInputs = [
+        'beerSweetness','beerSoftness','beerTasteIntensity','beerTastePersistence','beerAlcohol','beerDryness','beerAcidity','beerBitterness','beerSparkling'
+    ];
+    [...foodInputs, ...beerInputs].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.addEventListener('input', () => {
+                radarChart.data.datasets[0].data = getRadarFoodValues();
+                radarChart.data.datasets[1].data = getRadarBeerValues();
+                radarChart.update();
+            });
+        }
+    });
+}
+
+// === FINE GRAFICO RADAR ===
+
+// Gestione degli abbinamenti cibo-birra
+if (document.getElementById('pairingForm')) {
+    const form = document.getElementById('pairingForm');
+    const pairingsList = document.getElementById('pairingsList');
     const exportButton = document.getElementById('exportButton');
     const uploadAddBtn = document.getElementById('uploadAddBtn');
     const uploadReplaceBtn = document.getElementById('uploadReplaceBtn');
     const jsonFileInput = document.getElementById('jsonFile');
 
-    // Carica le degustazioni salvate all'avvio
-    let savedTastings = JSON.parse(localStorage.getItem('beerTastings')) || [];
+    // Carica gli abbinamenti salvati all'avvio
+    let savedPairings = JSON.parse(localStorage.getItem('beerPairings')) || [];
 
-    // Funzione per salvare una nuova degustazione
+    // Funzione per salvare un nuovo abbinamento
     form.addEventListener('submit', (e) => {
         e.preventDefault();
         
-        const formData = new FormData(form);
-        const tastingData = {
+        const pairingData = {
             id: Date.now(),
             date: new Date().toLocaleString(),
-            beerName: formData.get('beerName'),
-            beerType: formData.get('beerType'),
-            producer: formData.get('producer'),
-            origin: formData.get('origin'),
-            visual: {
-                foamColor: formData.get('foam_color'),
-                foamAppearance: formData.get('foam_appearance'),
-                foamPersistence: formData.get('foam_persistence'),
-                foamAdherence: formData.get('foam_adherence'),
-                clarity: formData.get('clarity'),
-                color: formData.get('color'),
-                notes: formData.get('visualNotes')
+            pairingName: document.getElementById('pairingName').value,
+            beerStyle: document.getElementById('beerStyle').value,
+            beerName: document.getElementById('beerName').value,
+            beerCharacteristics: {
+                sweetness: parseInt(document.getElementById('beerSweetness').value) || 0,
+                softness: parseInt(document.getElementById('beerSoftness').value) || 0,
+                tasteIntensity: parseInt(document.getElementById('beerTasteIntensity').value) || 0,
+                tastePersistence: parseInt(document.getElementById('beerTastePersistence').value) || 0,
+                alcohol: parseInt(document.getElementById('beerAlcohol').value) || 0,
+                dryness: parseInt(document.getElementById('beerDryness').value) || 0,
+                acidity: parseInt(document.getElementById('beerAcidity').value) || 0,
+                bitterness: parseInt(document.getElementById('beerBitterness').value) || 0,
+                sparkling: parseInt(document.getElementById('beerSparkling').value) || 0
             },
-            olfactory: {
-                intensity: formData.get('nose_intensity'),
-                descriptors: formData.getAll('descriptors'),
-                notes: formData.get('noseNotes')
+            foodName: document.getElementById('foodName').value,
+            foodCharacteristics: {
+                sweetTendency: parseInt(document.getElementById('sweetTendency').value) || 0,
+                fattiness: parseInt(document.getElementById('fattiness').value) || 0,
+                succulence: parseInt(document.getElementById('succulence').value) || 0,
+                sapidity: parseInt(document.getElementById('sapidity').value) || 0,
+                spiciness: parseInt(document.getElementById('spiciness').value) || 0,
+                bitterTendency: parseInt(document.getElementById('bitterTendency').value) || 0,
+                acidTendency: parseInt(document.getElementById('acidTendency').value) || 0,
+                sweetness: parseInt(document.getElementById('sweetness').value) || 0,
+                tastePersistence: parseInt(document.getElementById('tastePersistence').value) || 0,
+                tasteIntensity: parseInt(document.getElementById('tasteIntensity').value) || 0
             },
-            taste: {
-                sweetness: formData.get('sweetness'),
-                bitterness: formData.get('bitterness'),
-                body: formData.get('body'),
-                carbonation: formData.get('carbonation'),
-                notes: formData.get('tasteNotes')
-            },
-            final: {
-                balance: formData.get('balance'),
-                overallQuality: formData.get('overall_quality'),
-                notes: formData.get('notes')
+            evaluation: {
+                foodStructure: document.querySelector('input[name="foodStructure"]:checked')?.value || '',
+                beerStructure: document.querySelector('input[name="beerStructure"]:checked')?.value || '',
+                aromaticAffinity: document.querySelector('input[name="aromaticAffinity"]:checked')?.value || '',
+                pairingHarmony: document.querySelector('input[name="pairingHarmony"]:checked')?.value || ''
             }
         };
 
-        savedTastings.push(tastingData);
-        localStorage.setItem('beerTastings', JSON.stringify(savedTastings));
+        savedPairings.push(pairingData);
+        localStorage.setItem('beerPairings', JSON.stringify(savedPairings));
         
-        displayTastings();
+        displayPairings();
         form.reset();
     });
 
-    // Funzione per visualizzare le degustazioni salvate
-    function displayTastings() {
-        tastingsList.innerHTML = '';
-        savedTastings.forEach(tasting => {
-            const tastingElement = document.createElement('div');
-            tastingElement.className = 'tasting-card';
-            tastingElement.innerHTML = `
+    // Funzione per visualizzare gli abbinamenti salvati
+    function displayPairings() {
+        pairingsList.innerHTML = '';
+        savedPairings.forEach(pairing => {
+            const pairingElement = document.createElement('div');
+            pairingElement.className = 'tasting-card';
+            pairingElement.innerHTML = `
                 <div class="card-header">
                     <div class="header-content">
-                        <h3>${tasting.beerName} - ${tasting.beerType}</h3>
-                        <span class="tasting-date">${tasting.date}</span>
+                        <h3>${pairing.pairingName}</h3>
+                        <span class="tasting-date">${pairing.date}</span>
                     </div>
                     <span class="expand-icon">▼</span>
                 </div>
                 <div class="card-content">
-                    <p><strong>Produttore:</strong> ${tasting.producer || 'N/A'}</p>
-                    <p><strong>Origine:</strong> ${tasting.origin || 'N/A'}</p>
+                    <div class="pairing-header">
+                        <p><strong>Cibo/Preparazione:</strong> ${pairing.foodName}</p>
+                        <p><strong>Denominazione Birra:</strong> ${pairing.beerStyle}</p>
+                        <p><strong>Nome Birra:</strong> ${pairing.beerName}</p>
+                    </div>
                     
-                    <div class="tasting-sections">
-                        <div class="tasting-section">
-                            <h4>Esame Visivo</h4>
-                            ${tasting.visual.foamColor && tasting.visual.foamColor !== 'na' ? `
-                                <div class="subsection">
-                                    <h5>Colore Schiuma</h5>
-                                    <p>${tasting.visual.foamColor.replace('_', ' ')}</p>
-                                </div>
-                            ` : ''}
-                            ${tasting.visual.foamAppearance && tasting.visual.foamAppearance !== 'na' ? `
-                                <div class="subsection">
-                                    <h5>Aspetto Schiuma</h5>
-                                    <p>${tasting.visual.foamAppearance.replace('_', ' ')}</p>
-                                </div>
-                            ` : ''}
-                            ${tasting.visual.foamPersistence && tasting.visual.foamPersistence !== 'na' ? `
-                                <div class="subsection">
-                                    <h5>Persistenza Schiuma</h5>
-                                    <p>${tasting.visual.foamPersistence.replace('_', ' ')}</p>
-                                </div>
-                            ` : ''}
-                            ${tasting.visual.foamAdherence && tasting.visual.foamAdherence !== 'na' ? `
-                                <div class="subsection">
-                                    <h5>Aderenza Schiuma</h5>
-                                    <p>${tasting.visual.foamAdherence.replace('_', ' ')}</p>
-                                </div>
-                            ` : ''}
-                            ${tasting.visual.clarity && tasting.visual.clarity !== 'na' ? `
-                                <div class="subsection">
-                                    <h5>Limpidezza</h5>
-                                    <p>${tasting.visual.clarity.replace('_', ' ')}</p>
-                                </div>
-                            ` : ''}
-                            ${tasting.visual.color && tasting.visual.color !== 'na' ? `
-                                <div class="subsection">
-                                    <h5>Colore</h5>
-                                    <p>${tasting.visual.color.replace('_', ' ')}</p>
-                                </div>
-                            ` : ''}
-                            ${tasting.visual.notes ? `
-                                <div class="subsection">
-                                    <h5>Note</h5>
-                                    <p>${tasting.visual.notes}</p>
-                                </div>
-                            ` : ''}
+                    <div class="food-characteristics">
+                        <h4>Caratteristiche del Cibo</h4>
+                        <div class="rating-display">
+                            <p><strong>Tendenza Dolce:</strong> ${pairing.foodCharacteristics.sweetTendency}/10</p>
+                            <p><strong>Grasssezza:</strong> ${pairing.foodCharacteristics.fattiness}/10</p>
+                            <p><strong>Succulenza Untuosità:</strong> ${pairing.foodCharacteristics.succulence}/10</p>
+                            <p><strong>Sapidità:</strong> ${pairing.foodCharacteristics.sapidity}/10</p>
+                            <p><strong>Piccantezza:</strong> ${pairing.foodCharacteristics.spiciness}/10</p>
+                            <p><strong>Tendenza Amarognola:</strong> ${pairing.foodCharacteristics.bitterTendency}/10</p>
+                            <p><strong>Tendenza Acida:</strong> ${pairing.foodCharacteristics.acidTendency}/10</p>
+                            <p><strong>Dolcezza:</strong> ${pairing.foodCharacteristics.sweetness}/10</p>
+                            <p><strong>Persistenza Gusto Olfattiva:</strong> ${pairing.foodCharacteristics.tastePersistence}/10</p>
+                            <p><strong>Intensità Gusto Olfattiva:</strong> ${pairing.foodCharacteristics.tasteIntensity}/10</p>
                         </div>
-
-                        <div class="tasting-section">
-                            <h4>Esame Olfattivo</h4>
-                            ${tasting.olfactory.intensity && tasting.olfactory.intensity !== 'na' ? `
-                                <div class="subsection">
-                                    <h5>Intensità</h5>
-                                    <p>${tasting.olfactory.intensity.replace('_', ' ')}</p>
-                                </div>
-                            ` : ''}
-                            ${tasting.olfactory.descriptors && tasting.olfactory.descriptors.length > 0 ? `
-                                <div class="subsection">
-                                    <h5>Descrittori</h5>
-                                    <p>${tasting.olfactory.descriptors.map(d => d.charAt(0).toUpperCase() + d.slice(1)).join(', ')}</p>
-                                </div>
-                            ` : ''}
-                            ${tasting.olfactory.notes ? `
-                                <div class="subsection">
-                                    <h5>Note</h5>
-                                    <p>${tasting.olfactory.notes}</p>
-                                </div>
-                            ` : ''}
-                        </div>
-
-                        <div class="tasting-section">
-                            <h4>Esame Gustativo</h4>
-                            ${tasting.taste.sweetness && tasting.taste.sweetness !== 'na' ? `
-                                <div class="subsection">
-                                    <h5>Dolcezza</h5>
-                                    <p>${tasting.taste.sweetness.replace('_', ' ')}</p>
-                                </div>
-                            ` : ''}
-                            ${tasting.taste.bitterness && tasting.taste.bitterness !== 'na' ? `
-                                <div class="subsection">
-                                    <h5>Amarezza</h5>
-                                    <p>${tasting.taste.bitterness.replace('_', ' ')}</p>
-                                </div>
-                            ` : ''}
-                            ${tasting.taste.body && tasting.taste.body !== 'na' ? `
-                                <div class="subsection">
-                                    <h5>Corpo</h5>
-                                    <p>${tasting.taste.body.replace('_', ' ')}</p>
-                                </div>
-                            ` : ''}
-                            ${tasting.taste.carbonation && tasting.taste.carbonation !== 'na' ? `
-                                <div class="subsection">
-                                    <h5>Effervescenza</h5>
-                                    <p>${tasting.taste.carbonation.replace('_', ' ')}</p>
-                                </div>
-                            ` : ''}
-                            ${tasting.taste.notes ? `
-                                <div class="subsection">
-                                    <h5>Note</h5>
-                                    <p>${tasting.taste.notes}</p>
-                                </div>
-                            ` : ''}
-                        </div>
-
-                        <div class="tasting-section">
-                            <h4>Considerazioni Finali</h4>
-                            ${tasting.final.balance && tasting.final.balance !== 'na' ? `
-                                <div class="subsection">
-                                    <h5>Equilibrio</h5>
-                                    <p>${tasting.final.balance.replace('_', ' ')}</p>
-                                </div>
-                            ` : ''}
-                            ${tasting.final.overallQuality && tasting.final.overallQuality !== 'na' ? `
-                                <div class="subsection">
-                                    <h5>Qualità Complessiva</h5>
-                                    <p>${tasting.final.overallQuality.replace('_', ' ')}</p>
-                                </div>
-                            ` : ''}
-                            ${tasting.final.notes ? `
-                                <div class="subsection">
-                                    <h5>Note</h5>
-                                    <p>${tasting.final.notes}</p>
-                                </div>
-                            ` : ''}
+                    </div>
+                    
+                    <div class="beer-characteristics">
+                        <h4>Caratteristiche della Birra</h4>
+                        <div class="rating-display">
+                            <p><strong>Dolcezza:</strong> ${pairing.beerCharacteristics.sweetness}/10</p>
+                            <p><strong>Morbidezza:</strong> ${pairing.beerCharacteristics.softness}/10</p>
+                            <p><strong>Intensità Gusto-Olfattiva:</strong> ${pairing.beerCharacteristics.tasteIntensity}/10</p>
+                            <p><strong>Persistenza Gusto-Olfattiva:</strong> ${pairing.beerCharacteristics.tastePersistence}/10</p>
+                            <p><strong>Alcolicità:</strong> ${pairing.beerCharacteristics.alcohol}/10</p>
+                            <p><strong>Secchezza:</strong> ${pairing.beerCharacteristics.dryness}/10</p>
+                            <p><strong>Acidità:</strong> ${pairing.beerCharacteristics.acidity}/10</p>
+                            <p><strong>Amaro:</strong> ${pairing.beerCharacteristics.bitterness}/10</p>
+                            <p><strong>Frizzantezza Sapidità:</strong> ${pairing.beerCharacteristics.sparkling}/10</p>
                         </div>
                     </div>
 
+                    <div class="evaluation-section">
+                        <h4>Valutazione Abbinamento</h4>
+                        <div class="rating-display">
+                            <p><strong>Struttura del Cibo:</strong> ${pairing.evaluation.foodStructure.replace('_', ' ')}</p>
+                            <p><strong>Struttura della Birra:</strong> ${pairing.evaluation.beerStructure.replace('_', ' ')}</p>
+                            <p><strong>Affinità Aromatica:</strong> ${pairing.evaluation.aromaticAffinity.replace('_', ' ')}</p>
+                            <p><strong>Abbinamento:</strong> ${pairing.evaluation.pairingHarmony.replace('_', ' ')}</p>
+                        </div>
+                    </div>
+                    
                     <div class="card-buttons">
-                        <button onclick="deleteTasting(${tasting.id})" class="delete-btn">Elimina</button>
+                        <button onclick="deletePairing(${pairing.id})" class="delete-btn">Elimina</button>
                     </div>
                 </div>
             `;
             
             // Aggiungi l'event listener per l'espansione/compressione
-            tastingElement.addEventListener('click', (e) => {
-                // Non espandere/compressione se si clicca sui pulsanti
+            pairingElement.addEventListener('click', (e) => {
                 if (e.target.tagName === 'BUTTON') return;
-                
-                // Toggle della classe expanded
-                tastingElement.classList.toggle('expanded');
+                pairingElement.classList.toggle('expanded');
             });
             
-            tastingsList.appendChild(tastingElement);
+            pairingsList.appendChild(pairingElement);
         });
     }
 
-    // Funzione per eliminare una degustazione
-    window.deleteTasting = function(id) {
-        savedTastings = savedTastings.filter(tasting => tasting.id !== id);
-        localStorage.setItem('beerTastings', JSON.stringify(savedTastings));
-        displayTastings();
+    // Funzione per eliminare un abbinamento
+    window.deletePairing = function(id) {
+        savedPairings = savedPairings.filter(pairing => pairing.id !== id);
+        localStorage.setItem('beerPairings', JSON.stringify(savedPairings));
+        displayPairings();
     };
 
-    // Funzione per esportare le degustazioni
+    // Funzione per esportare gli abbinamenti
     exportButton.addEventListener('click', () => {
-        const dataStr = JSON.stringify(savedTastings, null, 2);
+        const dataStr = JSON.stringify(savedPairings, null, 2);
         const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
         
-        const exportFileDefaultName = 'degustazioni_birre.json';
+        const exportFileDefaultName = 'abbinamenti_birre.json';
         
         const linkElement = document.createElement('a');
         linkElement.setAttribute('href', dataUri);
@@ -1037,19 +1171,19 @@ if (document.getElementById('tastingForm')) {
         linkElement.click();
     });
 
-    // Funzione per caricare le degustazioni
-    function loadTastings(file, shouldReplace = false) {
+    // Funzione per caricare gli abbinamenti
+    function loadPairings(file, shouldReplace = false) {
         const reader = new FileReader();
         reader.onload = function(e) {
             try {
-                const loadedTastings = JSON.parse(e.target.result);
+                const loadedPairings = JSON.parse(e.target.result);
                 if (shouldReplace) {
-                    savedTastings = loadedTastings;
+                    savedPairings = loadedPairings;
                 } else {
-                    savedTastings = [...savedTastings, ...loadedTastings];
+                    savedPairings = [...savedPairings, ...loadedPairings];
                 }
-                localStorage.setItem('beerTastings', JSON.stringify(savedTastings));
-                displayTastings();
+                localStorage.setItem('beerPairings', JSON.stringify(savedPairings));
+                displayPairings();
             } catch (error) {
                 alert('Errore nel caricamento del file: ' + error.message);
             }
@@ -1069,10 +1203,10 @@ if (document.getElementById('tastingForm')) {
     jsonFileInput.addEventListener('change', (e) => {
         if (e.target.files.length > 0) {
             const shouldReplace = e.target.files[0].name.includes('replace');
-            loadTastings(e.target.files[0], shouldReplace);
+            loadPairings(e.target.files[0], shouldReplace);
         }
     });
 
-    // Visualizza le degustazioni all'avvio
-    displayTastings();
+    // Visualizza gli abbinamenti all'avvio
+    displayPairings();
 } 
