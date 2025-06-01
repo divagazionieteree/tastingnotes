@@ -4,174 +4,332 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#4a90e2">
-    <meta name="description" content="Guida agli abbinamenti tra cibi e vini">
+    <meta name="description" content="App per l'abbinamento tra cibi e vini">
+    <link rel="manifest" href="../manifest.json">
+    <link rel="apple-touch-icon" href="../icons/icon-192x192.png">
     <title>Abbinamento Cibo-Vino</title>
     <link rel="stylesheet" href="../styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        .pairing-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
+        .rating-input {
+            width: 60px;
+            padding: 5px;
+            margin-left: 10px;
         }
-
-        .pairing-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
+        .food-section, .wine-section, .evaluation-section {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
         }
-
-        .pairing-card {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            padding: 1.5rem;
-            transition: transform 0.3s ease;
-        }
-
-        .pairing-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .pairing-card h3 {
+        .food-section h3, .wine-section h3, .evaluation-section h3 {
+            margin-bottom: 15px;
             color: #2c3e50;
-            margin-bottom: 1rem;
         }
-
-        .pairing-card p {
-            color: #666;
-            margin-bottom: 1rem;
+        .rating-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
         }
-
-        .pairing-card ul {
-            list-style-type: none;
-            padding: 0;
+        .rating-group label {
+            flex: 1;
         }
-
-        .pairing-card li {
-            margin-bottom: 0.5rem;
-            padding-left: 1.5rem;
-            position: relative;
+        .form-header {
+            background: #e0e0e0;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            color: #2c3e50;
         }
-
-        .pairing-card li:before {
-            content: "•";
-            color: #4a90e2;
-            position: absolute;
-            left: 0;
+        .form-header .form-group {
+            margin-bottom: 15px;
         }
-
-        .header {
-            text-align: center;
-            padding: 2rem;
-            background: #4a90e2;
-            color: white;
-            margin-bottom: 2rem;
+        .form-header label {
+            color: #2c3e50;
+            font-weight: bold;
         }
-
-        .header h1 {
+        .form-header input, .form-header select {
+            background: white;
+            border: none;
+            padding: 8px;
+            border-radius: 4px;
+            width: 100%;
+        }
+        .form-header input:focus, .form-header select:focus {
+            outline: 2px solid #4a90e2;
+        }
+        .evaluation-group {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .evaluation-group > label {
+            min-width: 150px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            flex: 1;
+        }
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+        .radio-group input[type="radio"] {
             margin: 0;
-            font-size: 2.5rem;
         }
-
-        .header p {
-            margin: 1rem 0 0;
-            font-size: 1.2rem;
-            opacity: 0.9;
-        }
-
-        .back-button {
-            display: inline-block;
-            background: #4a90e2;
-            color: white;
-            padding: 0.8rem 1.5rem;
-            border-radius: 5px;
-            text-decoration: none;
-            transition: background 0.3s ease;
-            margin-bottom: 2rem;
-        }
-
-        .back-button:hover {
-            background: #357abd;
+        .radar-chart-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #fff;
+            border-radius: 8px;
+            margin: 20px 0;
+            padding: 20px;
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>Abbinamento Cibo-Vino</h1>
-        <p>Scopri i migliori abbinamenti per esaltare i sapori</p>
-    </div>
+    <div class="container">
+        <div class="header">
+            <h1>Abbinamento Cibo-Vino</h1>
+            <a href="../index.html" class="back-button">← Torna alla Home</a>
+        </div>
+        
+        <form id="pairingForm">
+            <div class="form-header">
+                <div class="form-group">
+                    <label for="pairingName">Nome Abbinamento:</label>
+                    <input type="text" id="pairingName" required>
+                </div>
 
-    <div class="pairing-container">
-        <a href="../index.html" class="back-button">← Torna alla Home</a>
+                <div class="form-group">
+                    <label for="foodName">Cibo/Preparazione:</label>
+                    <input type="text" id="foodName" required>
+                </div>
 
-        <div class="pairing-grid">
-            <div class="pairing-card">
-                <h3>Pesce e Frutti di Mare</h3>
-                <p>Abbinamenti ideali per piatti di mare:</p>
-                <ul>
-                    <li>Pesce bianco: Pinot Grigio, Vermentino</li>
-                    <li>Pesce azzurro: Verdicchio, Soave</li>
-                    <li>Frutti di mare: Prosecco, Franciacorta</li>
-                    <li>Pesce grasso: Chardonnay, Sauvignon Blanc</li>
-                </ul>
+                <div class="form-group">
+                    <label for="wineStyle">Denominazione Vino:</label>
+                    <select id="wineStyle" required>
+                        <option value="">Seleziona...</option>
+                        <option value="bianco">Bianco</option>
+                        <option value="rosso">Rosso</option>
+                        <option value="rosato">Rosato</option>
+                        <option value="spumante">Spumante</option>
+                        <option value="dolce">Dolce</option>
+                        <option value="altra">Altra</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="wineName">Nome Vino:</label>
+                    <input type="text" id="wineName" required>
+                </div>
             </div>
 
-            <div class="pairing-card">
-                <h3>Carne Bianca</h3>
-                <p>Vini perfetti per pollo e tacchino:</p>
-                <ul>
-                    <li>Pollo arrosto: Chardonnay, Pinot Bianco</li>
-                    <li>Tacchino: Pinot Nero, Barbera</li>
-                    <li>Pollo in umido: Montepulciano, Sangiovese</li>
-                    <li>Pollo piccante: Gewürztraminer, Riesling</li>
-                </ul>
+            <div class="food-section">
+                <h3>Caratteristiche del Cibo</h3>
+                <div class="rating-group">
+                    <label for="sweetTendency">Tendenza Dolce:</label>
+                    <input type="number" id="sweetTendency" class="rating-input" min="0" max="10" value="0">
+                </div>
+                <div class="rating-group">
+                    <label for="fattiness">Grassezza:</label>
+                    <input type="number" id="fattiness" class="rating-input" min="0" max="10" value="0">
+                </div>
+                <div class="rating-group">
+                    <label for="succulence">Succulenza:</label>
+                    <input type="number" id="succulence" class="rating-input" min="0" max="10" value="0">
+                </div>
+                <div class="rating-group">
+                    <label for="untuosity">Untuosità:</label>
+                    <input type="number" id="untuosity" class="rating-input" min="0" max="10" value="0">
+                </div>
+                <div class="rating-group">
+                    <label for="sapidity">Sapidità:</label>
+                    <input type="number" id="sapidity" class="rating-input" min="0" max="10" value="0">
+                </div>
+                <div class="rating-group">
+                    <label for="spiciness">Piccantezza:</label>
+                    <input type="number" id="spiciness" class="rating-input" min="0" max="10" value="0">
+                </div>
+                <div class="rating-group">
+                    <label for="bitterTendency">Tendenza Amarognola:</label>
+                    <input type="number" id="bitterTendency" class="rating-input" min="0" max="10" value="0">
+                </div>
+                <div class="rating-group">
+                    <label for="acidTendency">Tendenza Acida:</label>
+                    <input type="number" id="acidTendency" class="rating-input" min="0" max="10" value="0">
+                </div>
+                <div class="rating-group">
+                    <label for="sweetness">Dolcezza:</label>
+                    <input type="number" id="sweetness" class="rating-input" min="0" max="10" value="0">
+                </div>
+                <div class="rating-group">
+                    <label for="tastePersistence">Persistenza Gusto Olfattiva:</label>
+                    <input type="number" id="tastePersistence" class="rating-input" min="0" max="10" value="0">
+                </div>
+                <div class="rating-group">
+                    <label for="tasteIntensity">Intensità Gusto Olfattiva:</label>
+                    <input type="number" id="tasteIntensity" class="rating-input" min="0" max="10" value="0">
+                </div>
             </div>
 
-            <div class="pairing-card">
-                <h3>Carne Rossa</h3>
-                <p>Abbinamenti per carni rosse:</p>
-                <ul>
-                    <li>Manzo: Barolo, Brunello di Montalcino</li>
-                    <li>Maiale: Chianti, Montepulciano</li>
-                    <li>Agnello: Amarone, Primitivo</li>
-                    <li>Selvaggina: Sagrantino, Aglianico</li>
-                </ul>
+            <div class="wine-section">
+                <h3>Caratteristiche del Vino</h3>
+                <div class="rating-group">
+                    <label for="wineSweetness">Dolcezza:</label>
+                    <input type="number" id="wineSweetness" class="rating-input" min="0" max="10" value="0">
+                </div>
+                <div class="rating-group">
+                    <label for="wineSoftness">Morbidezza:</label>
+                    <input type="number" id="wineSoftness" class="rating-input" min="0" max="10" value="0">
+                </div>
+                <div class="rating-group">
+                    <label for="wineTasteIntensity">Intensità Gusto-Olfattiva:</label>
+                    <input type="number" id="wineTasteIntensity" class="rating-input" min="0" max="10" value="0">
+                </div>
+                <div class="rating-group">
+                    <label for="wineTastePersistence">Persistenza Gusto-Olfattiva:</label>
+                    <input type="number" id="wineTastePersistence" class="rating-input" min="0" max="10" value="0">
+                </div>
+                <div class="rating-group">
+                    <label for="wineAlcohol">Alcolicità:</label>
+                    <input type="number" id="wineAlcohol" class="rating-input" min="0" max="10" value="0">
+                </div>
+                <div class="rating-group">
+                    <label for="wineTannicity">Tannicità:</label>
+                    <input type="number" id="wineTannicity" class="rating-input" min="0" max="10" value="0">
+                </div>
+                <div class="rating-group">
+                    <label for="wineAcidity">Acidità:</label>
+                    <input type="number" id="wineAcidity" class="rating-input" min="0" max="10" value="0">
+                </div>
+                <div class="rating-group">
+                    <label for="wineEffervescence">Effervescenza:</label>
+                    <input type="number" id="wineEffervescence" class="rating-input" min="0" max="10" value="0">
+                </div>
+                <div class="rating-group">
+                    <label for="wineSapidity">Sapidità:</label>
+                    <input type="number" id="wineSapidity" class="rating-input" min="0" max="10" value="0">
+                </div>
             </div>
 
-            <div class="pairing-card">
-                <h3>Formaggi</h3>
-                <p>Vini per i formaggi:</p>
-                <ul>
-                    <li>Formaggi freschi: Prosecco, Pinot Grigio</li>
-                    <li>Formaggi stagionati: Amarone, Barolo</li>
-                    <li>Formaggi erborinati: Sauternes, Passito</li>
-                    <li>Formaggi di capra: Sauvignon Blanc, Vermentino</li>
-                </ul>
+            <!-- Radar Chart for Cibo/Vino Characteristics -->
+            <div class="radar-chart-container">
+                <canvas id="pairingRadarChart" width="400" height="400"></canvas>
             </div>
 
-            <div class="pairing-card">
-                <h3>Dolci</h3>
-                <p>Vini per i dessert:</p>
-                <ul>
-                    <li>Cioccolato: Recioto, Passito</li>
-                    <li>Frutta: Moscato d'Asti, Brachetto</li>
-                    <li>Dolci secchi: Vin Santo, Marsala</li>
-                    <li>Crema: Asti Spumante, Prosecco</li>
-                </ul>
+            <div class="evaluation-section">
+                <h3>Valutazione Abbinamento</h3>
+                <div class="evaluation-group">
+                    <label>Struttura del Cibo:</label>
+                    <div class="radio-group">
+                        <label>
+                            <input type="radio" name="foodStructure" value="poco_strutturato" required>
+                            Poco Strutturato
+                        </label>
+                        <label>
+                            <input type="radio" name="foodStructure" value="strutturato">
+                            Strutturato
+                        </label>
+                        <label>
+                            <input type="radio" name="foodStructure" value="molto_strutturato">
+                            Molto Strutturato
+                        </label>
+                    </div>
+                </div>
+                <div class="evaluation-group">
+                    <label>Struttura del Vino:</label>
+                    <div class="radio-group">
+                        <label>
+                            <input type="radio" name="wineStructure" value="leggero" required>
+                            Leggero
+                        </label>
+                        <label>
+                            <input type="radio" name="wineStructure" value="medio">
+                            Medio
+                        </label>
+                        <label>
+                            <input type="radio" name="wineStructure" value="robusto">
+                            Robusto
+                        </label>
+                    </div>
+                </div>
+                <div class="evaluation-group">
+                    <label>Affinità Aromatica:</label>
+                    <div class="radio-group">
+                        <label>
+                            <input type="radio" name="aromaticAffinity" value="poco_affine" required>
+                            Poco Affine
+                        </label>
+                        <label>
+                            <input type="radio" name="aromaticAffinity" value="mediamente_affine">
+                            Mediamente Affine
+                        </label>
+                        <label>
+                            <input type="radio" name="aromaticAffinity" value="affine">
+                            Affine
+                        </label>
+                    </div>
+                </div>
+                <div class="evaluation-group">
+                    <label>Abbinamento:</label>
+                    <div class="radio-group">
+                        <label>
+                            <input type="radio" name="pairingHarmony" value="poco_armonico" required>
+                            Poco Armonico
+                        </label>
+                        <label>
+                            <input type="radio" name="pairingHarmony" value="mediamente_armonico">
+                            Mediamente Armonico
+                        </label>
+                        <label>
+                            <input type="radio" name="pairingHarmony" value="armonico">
+                            Armonico
+                        </label>
+                    </div>
+                </div>
             </div>
 
-            <div class="pairing-card">
-                <h3>Pasta e Risotti</h3>
-                <p>Abbinamenti per primi piatti:</p>
-                <ul>
-                    <li>Pasta al pomodoro: Chianti, Montepulciano</li>
-                    <li>Pasta al pesce: Vermentino, Pinot Grigio</li>
-                    <li>Risotto ai funghi: Barolo, Barbaresco</li>
-                    <li>Risotto ai frutti di mare: Soave, Verdicchio</li>
-                </ul>
+            <button type="submit">Salva Abbinamento</button>
+        </form>
+
+        <div id="savedPairings">
+            <div class="export-section">
+                <h2>Abbinamenti Salvati</h2>
+                <div class="button-group">
+                    <button id="exportButton" class="export-btn">Esporta Tutti gli Abbinamenti</button>
+                    <div class="upload-section">
+                        <input type="file" id="jsonFile" accept=".json" style="display: none;">
+                        <button id="uploadAddBtn" class="upload-btn">Carica e Aggiungi</button>
+                        <button id="uploadReplaceBtn" class="upload-btn">Carica e Sostituisci</button>
+                    </div>
+                </div>
             </div>
+            <div id="pairingsList"></div>
         </div>
     </div>
+    <script src="../script.js"></script>
+    <script>
+        // Registra il service worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registrato con successo:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('Registrazione ServiceWorker fallita:', error);
+                    });
+            });
+        }
+    </script>
 </body>
 </html> 

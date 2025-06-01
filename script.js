@@ -795,33 +795,108 @@ function deleteTasting(id) {
     }
 }
 
-// === GRAFICO RADAR PER ABBINAMENTO CIBO-BIRRA ===
+// === GRAFICO RADAR PER ABBINAMENTO CIBO-BIRRA E CIBO-VINO ===
 if (document.getElementById('pairingRadarChart')) {
-    // Etichette 26 raggi (con separazione Succulenza/Untuosità e accorpamento Frizzantezza/Sapidità solo nel grafico)
-    const radarLabels = [
-        'Birra: Dolcezza, Morbidezza', // 0
-        'Birra: Intensità Gusto-Olfattiva, Persistenza Gusto-Olfattiva', // 1
-        '', '',
-        'Cibo: Succulenza', // 4
-        'Cibo: Untuosità', // 5
-        '', '',
-        'Birra: Acidità, Amaro', // 8
-        'Birra: Frizzantezza, Sapidità', // 9 (accorpato solo nel grafico)
-        '', '',
-        'Cibo: Intensità Gusto-Olfattiva, Persistenza Gusto-Olfattiva', // 12
-        'Cibo: Sapidità, Piccantezza, Tendenza Amarognola, Tendenza Acida, Dolcezza', // 13
-        '', '',
-        'Birra: Secchezza', // 16
-        'Birra: Alcolicità', // 17
-        '', '',
-        'Cibo: Grassezza', // 20
-        'Cibo: Tendenza Dolce', // 21
-        '', ''
-    ];
-    // Indici dei punti validi per ciascun gruppo
-    const foodIdx = [4,5,12,13,20,21];
-    const beerIdx = [0,1,8,9,16,17];
-
+    // Rileva se è la pagina vino o birra
+    const isVino = !!document.querySelector('.wine-section');
+    // Etichette e indici
+    let radarLabels, foodIdx, drinkIdx, getRadarDrinkValues, drinkInputs, drinkLabel;
+    if (isVino) {
+        radarLabels = [
+            'Vino: Dolcezza, Morbidezza', // 0
+            'Vino: Intensità Gusto-Olfattiva, Persistenza Gusto-Olfattiva', // 1
+            '', '',
+            'Cibo: Succulenza', // 4
+            'Cibo: Untuosità', // 5
+            '', '',
+            'Vino: Acidità', // 8 (solo acidità)
+            'Vino: Effervescenza, Sapidità', // 9
+            '', '',
+            'Cibo: Intensità Gusto Olfattiva, Persistenza Gusto Olfattiva', // 12
+            'Cibo: Sapidità, Piccantezza, Tendenza Amarognola, Tendenza Acida, Dolcezza', // 13
+            '', '',
+            'Vino: Tannicità', // 16
+            'Vino: Alcolicità', // 17
+            '', '',
+            'Cibo: Grassezza', // 20
+            'Cibo: Tendenza Dolce', // 21
+            '', ''
+        ];
+        foodIdx = [4,5,12,13,20,21];
+        drinkIdx = [0,1,8,9,16,17];
+        getRadarDrinkValues = function() {
+            const arr = Array(radarLabels.length).fill(null);
+            arr[0] = Math.max(
+                parseInt(document.getElementById('wineSweetness').value) || 0,
+                parseInt(document.getElementById('wineSoftness').value) || 0
+            );
+            arr[1] = Math.max(
+                parseInt(document.getElementById('wineTasteIntensity').value) || 0,
+                parseInt(document.getElementById('wineTastePersistence').value) || 0
+            );
+            arr[8] = parseInt(document.getElementById('wineAcidity').value) || 0;
+            arr[9] = Math.max(
+                parseInt(document.getElementById('wineEffervescence').value) || 0,
+                parseInt(document.getElementById('wineSapidity').value) || 0
+            );
+            arr[16] = parseInt(document.getElementById('wineTannicity').value) || 0;
+            arr[17] = parseInt(document.getElementById('wineAlcohol').value) || 0;
+            return arr;
+        };
+        drinkInputs = [
+            'wineSweetness','wineSoftness','wineTasteIntensity','wineTastePersistence','wineAlcohol','wineAcidity','wineTannicity','wineEffervescence','wineSapidity'
+        ];
+        drinkLabel = 'Vino';
+    } else {
+        radarLabels = [
+            'Birra: Dolcezza, Morbidezza', // 0
+            'Birra: Intensità Gusto-Olfattiva, Persistenza Gusto-Olfattiva', // 1
+            '', '',
+            'Cibo: Succulenza', // 4
+            'Cibo: Untuosità', // 5
+            '', '',
+            'Birra: Acidità, Amaro', // 8
+            'Birra: Frizzantezza, Sapidità', // 9
+            '', '',
+            'Cibo: Intensità Gusto-Olfattiva, Persistenza Gusto-Olfattiva', // 12
+            'Cibo: Sapidità, Piccantezza, Tendenza Amarognola, Tendenza Acida, Dolcezza', // 13
+            '', '',
+            'Birra: Secchezza', // 16
+            'Birra: Alcolicità', // 17
+            '', '',
+            'Cibo: Grassezza', // 20
+            'Cibo: Tendenza Dolce', // 21
+            '', ''
+        ];
+        foodIdx = [4,5,12,13,20,21];
+        drinkIdx = [0,1,8,9,16,17];
+        getRadarDrinkValues = function() {
+            const arr = Array(radarLabels.length).fill(null);
+            arr[0] = Math.max(
+                parseInt(document.getElementById('beerSweetness').value) || 0,
+                parseInt(document.getElementById('beerSoftness').value) || 0
+            );
+            arr[1] = Math.max(
+                parseInt(document.getElementById('beerTasteIntensity').value) || 0,
+                parseInt(document.getElementById('beerTastePersistence').value) || 0
+            );
+            arr[8] = Math.max(
+                parseInt(document.getElementById('beerAcidity').value) || 0,
+                parseInt(document.getElementById('beerBitterness').value) || 0
+            );
+            arr[9] = Math.max(
+                parseInt(document.getElementById('beerSparkling').value) || 0,
+                parseInt(document.getElementById('beerSapidity').value) || 0
+            );
+            arr[16] = parseInt(document.getElementById('beerDryness').value) || 0;
+            arr[17] = parseInt(document.getElementById('beerAlcohol').value) || 0;
+            return arr;
+        };
+        drinkInputs = [
+            'beerSweetness','beerSoftness','beerTasteIntensity','beerTastePersistence','beerAlcohol','beerDryness','beerAcidity','beerBitterness','beerSparkling','beerSapidity'
+        ];
+        drinkLabel = 'Birra';
+    }
     function getRadarFoodValues() {
         const arr = Array(radarLabels.length).fill(null);
         arr[4] = parseInt(document.getElementById('succulence').value) || 0;
@@ -839,28 +914,6 @@ if (document.getElementById('pairingRadarChart')) {
         );
         arr[20] = parseInt(document.getElementById('fattiness').value) || 0;
         arr[21] = parseInt(document.getElementById('sweetTendency').value) || 0;
-        return arr;
-    }
-    function getRadarBeerValues() {
-        const arr = Array(radarLabels.length).fill(null);
-        arr[0] = Math.max(
-            parseInt(document.getElementById('beerSweetness').value) || 0,
-            parseInt(document.getElementById('beerSoftness').value) || 0
-        );
-        arr[1] = Math.max(
-            parseInt(document.getElementById('beerTasteIntensity').value) || 0,
-            parseInt(document.getElementById('beerTastePersistence').value) || 0
-        );
-        arr[8] = Math.max(
-            parseInt(document.getElementById('beerAcidity').value) || 0,
-            parseInt(document.getElementById('beerBitterness').value) || 0
-        );
-        arr[9] = Math.max(
-            parseInt(document.getElementById('beerSparkling').value) || 0,
-            parseInt(document.getElementById('beerSapidity').value) || 0
-        );
-        arr[16] = parseInt(document.getElementById('beerDryness').value) || 0;
-        arr[17] = parseInt(document.getElementById('beerAlcohol').value) || 0;
         return arr;
     }
     // Plugin per disegnare i poligoni chiusi custom
@@ -899,13 +952,13 @@ if (document.getElementById('pairingRadarChart')) {
             ctx.lineWidth = 2;
             ctx.stroke();
             ctx.restore();
-            // Birra
-            const beerVals = getRadarBeerValues();
+            // Drink (vino o birra)
+            const drinkVals = getRadarDrinkValues();
             ctx.save();
             ctx.beginPath();
             first = true;
-            beerIdx.forEach(idx => {
-                const v = beerVals[idx];
+            drinkIdx.forEach(idx => {
+                const v = drinkVals[idx];
                 if (v !== null && v !== undefined) {
                     const pt = rScale.getPointPositionForValue(idx, v);
                     if (first) {
@@ -917,14 +970,14 @@ if (document.getElementById('pairingRadarChart')) {
                 }
             });
             // Chiudi il poligono
-            const ptb0 = rScale.getPointPositionForValue(beerIdx[0], beerVals[beerIdx[0]]);
+            const ptb0 = rScale.getPointPositionForValue(drinkIdx[0], drinkVals[drinkIdx[0]]);
             ctx.lineTo(ptb0.x, ptb0.y);
             ctx.closePath();
             ctx.globalAlpha = 0.25;
-            ctx.fillStyle = 'rgba(255,99,132,1)';
+            ctx.fillStyle = isVino ? 'rgba(255,206,86,1)' : 'rgba(255,99,132,1)';
             ctx.fill();
             ctx.globalAlpha = 1;
-            ctx.strokeStyle = 'rgba(255,99,132,1)';
+            ctx.strokeStyle = isVino ? 'rgba(255,206,86,1)' : 'rgba(255,99,132,1)';
             ctx.lineWidth = 2;
             ctx.stroke();
             ctx.restore();
@@ -947,11 +1000,11 @@ if (document.getElementById('pairingRadarChart')) {
                     borderWidth: 2
                 },
                 {
-                    label: 'Birra',
-                    data: getRadarBeerValues(),
-                    backgroundColor: 'rgba(255, 99, 132, 0.0)',
-                    borderColor: 'rgba(255, 99, 132, 0.0)',
-                    pointBackgroundColor: 'rgba(255, 99, 132, 1)',
+                    label: drinkLabel,
+                    data: getRadarDrinkValues(),
+                    backgroundColor: isVino ? 'rgba(255, 206, 86, 0.0)' : 'rgba(255, 99, 132, 0.0)',
+                    borderColor: isVino ? 'rgba(255, 206, 86, 0.0)' : 'rgba(255, 99, 132, 0.0)',
+                    pointBackgroundColor: isVino ? 'rgba(255, 206, 86, 1)' : 'rgba(255, 99, 132, 1)',
                     borderWidth: 2
                 }
             ]
@@ -993,26 +1046,24 @@ if (document.getElementById('pairingRadarChart')) {
 
     // Aggiorna il grafico quando cambiano i valori
     const foodInputs = [
-        'sweetTendency','fattiness','succulence','sapidity','spiciness','bitterTendency','acidTendency','sweetness','tastePersistence','tasteIntensity'
+        'sweetTendency','fattiness','succulence','untuosity','sapidity','spiciness','bitterTendency','acidTendency','sweetness','tastePersistence','tasteIntensity'
     ];
-    const beerInputs = [
-        'beerSweetness','beerSoftness','beerTasteIntensity','beerTastePersistence','beerAlcohol','beerDryness','beerAcidity','beerBitterness','beerSparkling'
-    ];
-    [...foodInputs, ...beerInputs].forEach(id => {
+    [...foodInputs, ...drinkInputs].forEach(id => {
         const el = document.getElementById(id);
         if (el) {
             el.addEventListener('input', () => {
-                radarChart.data.datasets[0].data = getRadarFoodValues();
-                radarChart.data.datasets[1].data = getRadarBeerValues();
-                radarChart.update();
+                if (radarChart) {
+                    radarChart.data.datasets[0].data = getRadarFoodValues();
+                    radarChart.data.datasets[1].data = getRadarDrinkValues();
+                    radarChart.update();
+                }
             });
         }
     });
 }
-
 // === FINE GRAFICO RADAR ===
 
-// Gestione degli abbinamenti cibo-birra
+// Gestione degli abbinamenti cibo-birra e cibo-vino
 if (document.getElementById('pairingForm')) {
     const form = document.getElementById('pairingForm');
     const pairingsList = document.getElementById('pairingsList');
@@ -1021,54 +1072,113 @@ if (document.getElementById('pairingForm')) {
     const uploadReplaceBtn = document.getElementById('uploadReplaceBtn');
     const jsonFileInput = document.getElementById('jsonFile');
 
+    // Rileva se è la pagina vino o birra
+    const isVino = !!document.querySelector('.wine-section');
+    const storageKey = isVino ? 'winePairings' : 'beerPairings';
+    const drinkLabel = isVino ? 'Vino' : 'Birra';
+
     // Carica gli abbinamenti salvati all'avvio
-    let savedPairings = JSON.parse(localStorage.getItem('beerPairings')) || [];
+    let savedPairings = JSON.parse(localStorage.getItem(storageKey)) || [];
+    let editingPairingId = null; // Aggiungo variabile per tenere traccia dell'ID in modifica
 
     // Funzione per salvare un nuovo abbinamento
     form.addEventListener('submit', (e) => {
         e.preventDefault();
-        
-        const pairingData = {
-            id: Date.now(),
-            date: new Date().toLocaleString(),
-            pairingName: document.getElementById('pairingName').value,
-            beerStyle: document.getElementById('beerStyle').value,
-            beerName: document.getElementById('beerName').value,
-            beerCharacteristics: {
-                sweetness: parseInt(document.getElementById('beerSweetness').value) || 0,
-                softness: parseInt(document.getElementById('beerSoftness').value) || 0,
-                tasteIntensity: parseInt(document.getElementById('beerTasteIntensity').value) || 0,
-                tastePersistence: parseInt(document.getElementById('beerTastePersistence').value) || 0,
-                alcohol: parseInt(document.getElementById('beerAlcohol').value) || 0,
-                dryness: parseInt(document.getElementById('beerDryness').value) || 0,
-                acidity: parseInt(document.getElementById('beerAcidity').value) || 0,
-                bitterness: parseInt(document.getElementById('beerBitterness').value) || 0,
-                sparkling: parseInt(document.getElementById('beerSparkling').value) || 0
-            },
-            foodName: document.getElementById('foodName').value,
-            foodCharacteristics: {
-                sweetTendency: parseInt(document.getElementById('sweetTendency').value) || 0,
-                fattiness: parseInt(document.getElementById('fattiness').value) || 0,
-                succulence: parseInt(document.getElementById('succulence').value) || 0,
-                sapidity: parseInt(document.getElementById('sapidity').value) || 0,
-                spiciness: parseInt(document.getElementById('spiciness').value) || 0,
-                bitterTendency: parseInt(document.getElementById('bitterTendency').value) || 0,
-                acidTendency: parseInt(document.getElementById('acidTendency').value) || 0,
-                sweetness: parseInt(document.getElementById('sweetness').value) || 0,
-                tastePersistence: parseInt(document.getElementById('tastePersistence').value) || 0,
-                tasteIntensity: parseInt(document.getElementById('tasteIntensity').value) || 0
-            },
-            evaluation: {
-                foodStructure: document.querySelector('input[name="foodStructure"]:checked')?.value || '',
-                beerStructure: document.querySelector('input[name="beerStructure"]:checked')?.value || '',
-                aromaticAffinity: document.querySelector('input[name="aromaticAffinity"]:checked')?.value || '',
-                pairingHarmony: document.querySelector('input[name="pairingHarmony"]:checked')?.value || ''
-            }
-        };
+        let pairingData;
+        if (isVino) {
+            pairingData = {
+                id: editingPairingId || Date.now(),
+                date: new Date().toLocaleString(),
+                pairingName: document.getElementById('pairingName').value,
+                wineStyle: document.getElementById('wineStyle').value,
+                wineName: document.getElementById('wineName').value,
+                wineCharacteristics: {
+                    sweetness: parseInt(document.getElementById('wineSweetness').value) || 0,
+                    softness: parseInt(document.getElementById('wineSoftness').value) || 0,
+                    tasteIntensity: parseInt(document.getElementById('wineTasteIntensity').value) || 0,
+                    tastePersistence: parseInt(document.getElementById('wineTastePersistence').value) || 0,
+                    alcohol: parseInt(document.getElementById('wineAlcohol').value) || 0,
+                    tannicity: parseInt(document.getElementById('wineTannicity').value) || 0,
+                    acidity: parseInt(document.getElementById('wineAcidity').value) || 0,
+                    effervescence: parseInt(document.getElementById('wineEffervescence').value) || 0,
+                    sapidity: parseInt(document.getElementById('wineSapidity').value) || 0
+                },
+                foodName: document.getElementById('foodName').value,
+                foodCharacteristics: {
+                    sweetTendency: parseInt(document.getElementById('sweetTendency').value) || 0,
+                    fattiness: parseInt(document.getElementById('fattiness').value) || 0,
+                    succulence: parseInt(document.getElementById('succulence').value) || 0,
+                    untuosity: parseInt(document.getElementById('untuosity').value) || 0,
+                    sapidity: parseInt(document.getElementById('sapidity').value) || 0,
+                    spiciness: parseInt(document.getElementById('spiciness').value) || 0,
+                    bitterTendency: parseInt(document.getElementById('bitterTendency').value) || 0,
+                    acidTendency: parseInt(document.getElementById('acidTendency').value) || 0,
+                    sweetness: parseInt(document.getElementById('sweetness').value) || 0,
+                    tastePersistence: parseInt(document.getElementById('tastePersistence').value) || 0,
+                    tasteIntensity: parseInt(document.getElementById('tasteIntensity').value) || 0
+                },
+                evaluation: {
+                    foodStructure: document.querySelector('input[name="foodStructure"]:checked')?.value || '',
+                    wineStructure: document.querySelector('input[name="wineStructure"]:checked')?.value || '',
+                    aromaticAffinity: document.querySelector('input[name="aromaticAffinity"]:checked')?.value || '',
+                    pairingHarmony: document.querySelector('input[name="pairingHarmony"]:checked')?.value || ''
+                }
+            };
+        } else {
+            pairingData = {
+                id: editingPairingId || Date.now(),
+                date: new Date().toLocaleString(),
+                pairingName: document.getElementById('pairingName').value,
+                beerStyle: document.getElementById('beerStyle').value,
+                beerName: document.getElementById('beerName').value,
+                beerCharacteristics: {
+                    sweetness: parseInt(document.getElementById('beerSweetness').value) || 0,
+                    softness: parseInt(document.getElementById('beerSoftness').value) || 0,
+                    tasteIntensity: parseInt(document.getElementById('beerTasteIntensity').value) || 0,
+                    tastePersistence: parseInt(document.getElementById('beerTastePersistence').value) || 0,
+                    alcohol: parseInt(document.getElementById('beerAlcohol').value) || 0,
+                    dryness: parseInt(document.getElementById('beerDryness').value) || 0,
+                    acidity: parseInt(document.getElementById('beerAcidity').value) || 0,
+                    bitterness: parseInt(document.getElementById('beerBitterness').value) || 0,
+                    sparkling: parseInt(document.getElementById('beerSparkling').value) || 0,
+                    sapidity: parseInt(document.getElementById('beerSapidity').value) || 0
+                },
+                foodName: document.getElementById('foodName').value,
+                foodCharacteristics: {
+                    sweetTendency: parseInt(document.getElementById('sweetTendency').value) || 0,
+                    fattiness: parseInt(document.getElementById('fattiness').value) || 0,
+                    succulence: parseInt(document.getElementById('succulence').value) || 0,
+                    untuosity: parseInt(document.getElementById('untuosity').value) || 0,
+                    sapidity: parseInt(document.getElementById('sapidity').value) || 0,
+                    spiciness: parseInt(document.getElementById('spiciness').value) || 0,
+                    bitterTendency: parseInt(document.getElementById('bitterTendency').value) || 0,
+                    acidTendency: parseInt(document.getElementById('acidTendency').value) || 0,
+                    sweetness: parseInt(document.getElementById('sweetness').value) || 0,
+                    tastePersistence: parseInt(document.getElementById('tastePersistence').value) || 0,
+                    tasteIntensity: parseInt(document.getElementById('tasteIntensity').value) || 0
+                },
+                evaluation: {
+                    foodStructure: document.querySelector('input[name="foodStructure"]:checked')?.value || '',
+                    beerStructure: document.querySelector('input[name="beerStructure"]:checked')?.value || '',
+                    aromaticAffinity: document.querySelector('input[name="aromaticAffinity"]:checked')?.value || '',
+                    pairingHarmony: document.querySelector('input[name="pairingHarmony"]:checked')?.value || ''
+                }
+            };
+        }
 
-        savedPairings.push(pairingData);
-        localStorage.setItem('beerPairings', JSON.stringify(savedPairings));
-        
+        if (editingPairingId) {
+            // Aggiorna l'elemento esistente
+            const index = savedPairings.findIndex(p => p.id === editingPairingId);
+            if (index !== -1) {
+                savedPairings[index] = pairingData;
+            }
+            editingPairingId = null; // Resetta l'ID in modifica
+        } else {
+            // Aggiungi nuovo elemento
+            savedPairings.push(pairingData);
+        }
+
+        localStorage.setItem(storageKey, JSON.stringify(savedPairings));
         displayPairings();
         form.reset();
     });
@@ -1090,16 +1200,16 @@ if (document.getElementById('pairingForm')) {
                 <div class="card-content">
                     <div class="pairing-header">
                         <p><strong>Cibo/Preparazione:</strong> ${pairing.foodName}</p>
-                        <p><strong>Denominazione Birra:</strong> ${pairing.beerStyle}</p>
-                        <p><strong>Nome Birra:</strong> ${pairing.beerName}</p>
+                        <p><strong>Denominazione ${drinkLabel}:</strong> ${isVino ? pairing.wineStyle : pairing.beerStyle}</p>
+                        <p><strong>Nome ${drinkLabel}:</strong> ${isVino ? pairing.wineName : pairing.beerName}</p>
                     </div>
-                    
                     <div class="food-characteristics">
                         <h4>Caratteristiche del Cibo</h4>
                         <div class="rating-display">
                             <p><strong>Tendenza Dolce:</strong> ${pairing.foodCharacteristics.sweetTendency}/10</p>
-                            <p><strong>Grasssezza:</strong> ${pairing.foodCharacteristics.fattiness}/10</p>
-                            <p><strong>Succulenza Untuosità:</strong> ${pairing.foodCharacteristics.succulence}/10</p>
+                            <p><strong>Grassezza:</strong> ${pairing.foodCharacteristics.fattiness}/10</p>
+                            <p><strong>Succulenza:</strong> ${pairing.foodCharacteristics.succulence}/10</p>
+                            <p><strong>Untuosità:</strong> ${pairing.foodCharacteristics.untuosity || 0}/10</p>
                             <p><strong>Sapidità:</strong> ${pairing.foodCharacteristics.sapidity}/10</p>
                             <p><strong>Piccantezza:</strong> ${pairing.foodCharacteristics.spiciness}/10</p>
                             <p><strong>Tendenza Amarognola:</strong> ${pairing.foodCharacteristics.bitterTendency}/10</p>
@@ -1109,44 +1219,53 @@ if (document.getElementById('pairingForm')) {
                             <p><strong>Intensità Gusto Olfattiva:</strong> ${pairing.foodCharacteristics.tasteIntensity}/10</p>
                         </div>
                     </div>
-                    
-                    <div class="beer-characteristics">
-                        <h4>Caratteristiche della Birra</h4>
+                    <div class="drink-characteristics">
+                        <h4>Caratteristiche del ${drinkLabel}</h4>
                         <div class="rating-display">
-                            <p><strong>Dolcezza:</strong> ${pairing.beerCharacteristics.sweetness}/10</p>
-                            <p><strong>Morbidezza:</strong> ${pairing.beerCharacteristics.softness}/10</p>
-                            <p><strong>Intensità Gusto-Olfattiva:</strong> ${pairing.beerCharacteristics.tasteIntensity}/10</p>
-                            <p><strong>Persistenza Gusto-Olfattiva:</strong> ${pairing.beerCharacteristics.tastePersistence}/10</p>
-                            <p><strong>Alcolicità:</strong> ${pairing.beerCharacteristics.alcohol}/10</p>
-                            <p><strong>Secchezza:</strong> ${pairing.beerCharacteristics.dryness}/10</p>
-                            <p><strong>Acidità:</strong> ${pairing.beerCharacteristics.acidity}/10</p>
-                            <p><strong>Amaro:</strong> ${pairing.beerCharacteristics.bitterness}/10</p>
-                            <p><strong>Frizzantezza Sapidità:</strong> ${pairing.beerCharacteristics.sparkling}/10</p>
+                            ${isVino ? `
+                                <p><strong>Dolcezza:</strong> ${pairing.wineCharacteristics.sweetness}/10</p>
+                                <p><strong>Morbidezza:</strong> ${pairing.wineCharacteristics.softness}/10</p>
+                                <p><strong>Intensità Gusto-Olfattiva:</strong> ${pairing.wineCharacteristics.tasteIntensity}/10</p>
+                                <p><strong>Persistenza Gusto-Olfattiva:</strong> ${pairing.wineCharacteristics.tastePersistence}/10</p>
+                                <p><strong>Alcolicità:</strong> ${pairing.wineCharacteristics.alcohol}/10</p>
+                                <p><strong>Tannicità:</strong> ${pairing.wineCharacteristics.tannicity}/10</p>
+                                <p><strong>Acidità:</strong> ${pairing.wineCharacteristics.acidity}/10</p>
+                                <p><strong>Effervescenza:</strong> ${pairing.wineCharacteristics.effervescence}/10</p>
+                                <p><strong>Sapidità:</strong> ${pairing.wineCharacteristics.sapidity}/10</p>
+                            ` : `
+                                <p><strong>Dolcezza:</strong> ${pairing.beerCharacteristics.sweetness}/10</p>
+                                <p><strong>Morbidezza:</strong> ${pairing.beerCharacteristics.softness}/10</p>
+                                <p><strong>Intensità Gusto-Olfattiva:</strong> ${pairing.beerCharacteristics.tasteIntensity}/10</p>
+                                <p><strong>Persistenza Gusto-Olfattiva:</strong> ${pairing.beerCharacteristics.tastePersistence}/10</p>
+                                <p><strong>Alcolicità:</strong> ${pairing.beerCharacteristics.alcohol}/10</p>
+                                <p><strong>Secchezza:</strong> ${pairing.beerCharacteristics.dryness}/10</p>
+                                <p><strong>Acidità:</strong> ${pairing.beerCharacteristics.acidity}/10</p>
+                                <p><strong>Amaro:</strong> ${pairing.beerCharacteristics.bitterness}/10</p>
+                                <p><strong>Frizzantezza:</strong> ${pairing.beerCharacteristics.sparkling}/10</p>
+                                <p><strong>Sapidità:</strong> ${pairing.beerCharacteristics.sapidity || 0}/10</p>
+                            `}
                         </div>
                     </div>
-
                     <div class="evaluation-section">
                         <h4>Valutazione Abbinamento</h4>
                         <div class="rating-display">
                             <p><strong>Struttura del Cibo:</strong> ${pairing.evaluation.foodStructure.replace('_', ' ')}</p>
-                            <p><strong>Struttura della Birra:</strong> ${pairing.evaluation.beerStructure.replace('_', ' ')}</p>
+                            <p><strong>Struttura della ${drinkLabel}:</strong> ${(isVino ? pairing.evaluation.wineStructure : pairing.evaluation.beerStructure).replace('_', ' ')}</p>
                             <p><strong>Affinità Aromatica:</strong> ${pairing.evaluation.aromaticAffinity.replace('_', ' ')}</p>
                             <p><strong>Abbinamento:</strong> ${pairing.evaluation.pairingHarmony.replace('_', ' ')}</p>
                         </div>
                     </div>
-                    
                     <div class="card-buttons">
+                        <button onclick="editPairing(${pairing.id})" class="edit-btn">Modifica</button>
                         <button onclick="deletePairing(${pairing.id})" class="delete-btn">Elimina</button>
                     </div>
                 </div>
             `;
-            
             // Aggiungi l'event listener per l'espansione/compressione
             pairingElement.addEventListener('click', (e) => {
                 if (e.target.tagName === 'BUTTON') return;
                 pairingElement.classList.toggle('expanded');
             });
-            
             pairingsList.appendChild(pairingElement);
         });
     }
@@ -1154,7 +1273,7 @@ if (document.getElementById('pairingForm')) {
     // Funzione per eliminare un abbinamento
     window.deletePairing = function(id) {
         savedPairings = savedPairings.filter(pairing => pairing.id !== id);
-        localStorage.setItem('beerPairings', JSON.stringify(savedPairings));
+        localStorage.setItem(storageKey, JSON.stringify(savedPairings));
         displayPairings();
     };
 
@@ -1162,9 +1281,7 @@ if (document.getElementById('pairingForm')) {
     exportButton.addEventListener('click', () => {
         const dataStr = JSON.stringify(savedPairings, null, 2);
         const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-        
-        const exportFileDefaultName = 'abbinamenti_birre.json';
-        
+        const exportFileDefaultName = isVino ? 'abbinamenti_vini.json' : 'abbinamenti_birre.json';
         const linkElement = document.createElement('a');
         linkElement.setAttribute('href', dataUri);
         linkElement.setAttribute('download', exportFileDefaultName);
@@ -1182,7 +1299,7 @@ if (document.getElementById('pairingForm')) {
                 } else {
                     savedPairings = [...savedPairings, ...loadedPairings];
                 }
-                localStorage.setItem('beerPairings', JSON.stringify(savedPairings));
+                localStorage.setItem(storageKey, JSON.stringify(savedPairings));
                 displayPairings();
             } catch (error) {
                 alert('Errore nel caricamento del file: ' + error.message);
@@ -1209,4 +1326,84 @@ if (document.getElementById('pairingForm')) {
 
     // Visualizza gli abbinamenti all'avvio
     displayPairings();
+
+    // Funzione per caricare i dati di una scheda nel form per modifica
+    window.editPairing = function(id) {
+        const pairing = savedPairings.find(p => p.id === id);
+        if (!pairing) return;
+        editingPairingId = id; // Imposta l'ID in modifica
+        document.getElementById('pairingName').value = pairing.pairingName;
+        document.getElementById('foodName').value = pairing.foodName;
+        if (isVino) {
+            document.getElementById('wineStyle').value = pairing.wineStyle;
+            document.getElementById('wineName').value = pairing.wineName;
+            // Caratteristiche vino
+            document.getElementById('wineSweetness').value = pairing.wineCharacteristics.sweetness || 0;
+            document.getElementById('wineSoftness').value = pairing.wineCharacteristics.softness || 0;
+            document.getElementById('wineTasteIntensity').value = pairing.wineCharacteristics.tasteIntensity || 0;
+            document.getElementById('wineTastePersistence').value = pairing.wineCharacteristics.tastePersistence || 0;
+            document.getElementById('wineAlcohol').value = pairing.wineCharacteristics.alcohol || 0;
+            document.getElementById('wineTannicity').value = pairing.wineCharacteristics.tannicity || 0;
+            document.getElementById('wineAcidity').value = pairing.wineCharacteristics.acidity || 0;
+            document.getElementById('wineEffervescence').value = pairing.wineCharacteristics.effervescence || 0;
+            document.getElementById('wineSapidity').value = pairing.wineCharacteristics.sapidity || 0;
+        } else {
+            document.getElementById('beerStyle').value = pairing.beerStyle;
+            document.getElementById('beerName').value = pairing.beerName;
+            // Caratteristiche birra
+            document.getElementById('beerSweetness').value = pairing.beerCharacteristics.sweetness || 0;
+            document.getElementById('beerSoftness').value = pairing.beerCharacteristics.softness || 0;
+            document.getElementById('beerTasteIntensity').value = pairing.beerCharacteristics.tasteIntensity || 0;
+            document.getElementById('beerTastePersistence').value = pairing.beerCharacteristics.tastePersistence || 0;
+            document.getElementById('beerAlcohol').value = pairing.beerCharacteristics.alcohol || 0;
+            document.getElementById('beerDryness').value = pairing.beerCharacteristics.dryness || 0;
+            document.getElementById('beerAcidity').value = pairing.beerCharacteristics.acidity || 0;
+            document.getElementById('beerBitterness').value = pairing.beerCharacteristics.bitterness || 0;
+            document.getElementById('beerSparkling').value = pairing.beerCharacteristics.sparkling || 0;
+            document.getElementById('beerSapidity').value = pairing.beerCharacteristics.sapidity || 0;
+        }
+        // Caratteristiche cibo
+        document.getElementById('sweetTendency').value = pairing.foodCharacteristics.sweetTendency || 0;
+        document.getElementById('fattiness').value = pairing.foodCharacteristics.fattiness || 0;
+        document.getElementById('succulence').value = pairing.foodCharacteristics.succulence || 0;
+        document.getElementById('untuosity').value = pairing.foodCharacteristics.untuosity || 0;
+        document.getElementById('sapidity').value = pairing.foodCharacteristics.sapidity || 0;
+        document.getElementById('spiciness').value = pairing.foodCharacteristics.spiciness || 0;
+        document.getElementById('bitterTendency').value = pairing.foodCharacteristics.bitterTendency || 0;
+        document.getElementById('acidTendency').value = pairing.foodCharacteristics.acidTendency || 0;
+        document.getElementById('sweetness').value = pairing.foodCharacteristics.sweetness || 0;
+        document.getElementById('tastePersistence').value = pairing.foodCharacteristics.tastePersistence || 0;
+        document.getElementById('tasteIntensity').value = pairing.foodCharacteristics.tasteIntensity || 0;
+        // Valutazione abbinamento
+        if (pairing.evaluation) {
+            if (isVino && pairing.evaluation.wineStructure) {
+                const el = document.querySelector(`input[name='wineStructure'][value='${pairing.evaluation.wineStructure}']`);
+                if (el) el.checked = true;
+            }
+            if (!isVino && pairing.evaluation.beerStructure) {
+                const el = document.querySelector(`input[name='beerStructure'][value='${pairing.evaluation.beerStructure}']`);
+                if (el) el.checked = true;
+            }
+            if (pairing.evaluation.foodStructure) {
+                const el = document.querySelector(`input[name='foodStructure'][value='${pairing.evaluation.foodStructure}']`);
+                if (el) el.checked = true;
+            }
+            if (pairing.evaluation.aromaticAffinity) {
+                const el = document.querySelector(`input[name='aromaticAffinity'][value='${pairing.evaluation.aromaticAffinity}']`);
+                if (el) el.checked = true;
+            }
+            if (pairing.evaluation.pairingHarmony) {
+                const el = document.querySelector(`input[name='pairingHarmony'][value='${pairing.evaluation.pairingHarmony}']`);
+                if (el) el.checked = true;
+            }
+        }
+        // Scroll al form
+        document.getElementById('pairingForm').scrollIntoView({behavior: 'smooth'});
+        // Aggiorna il grafico radar
+        if (typeof radarChart !== 'undefined' && radarChart) {
+            radarChart.data.datasets[0].data = getRadarFoodValues();
+            radarChart.data.datasets[1].data = getRadarDrinkValues();
+            radarChart.update();
+        }
+    };
 } 
